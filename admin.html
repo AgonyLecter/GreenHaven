@@ -135,7 +135,14 @@ document.addEventListener('focusout',()=>setTimeout(()=>{if(dirty)refresh()},0))
 // ...nor in the middle of a tap, or the button under the finger is replaced and the tap is lost.
 let held=false;addEventListener('pointerdown',()=>held=true,true);
 ['pointerup','pointercancel'].forEach(ev=>addEventListener(ev,()=>setTimeout(()=>{held=false;if(dirty)refresh()},60),true));
-if(db)db.ref('menu').on('value',s=>{M=s.val()||{};st(Object.keys(M.cats||{}).length+' categories','ok');refresh()},e=>st('Read error: '+e.message,'err'));
+// One-off clean-up: old Italian placeholder texts and the old tagline become English.
+const EN={'Genetiche rare, quantità limitata':'Rare genetics / Limited supply','Formato piccolo, ottima qualità':'Small size / Great quality','Top tier, quantità limitata':'Top tier / Limited quantity','Nuova varietà':'New strain','Nuova categoria':'New category'};
+function toEnglish(){const u={},fix=(path,v)=>{const k=String(v??'').trim();if(EN[k])u[path]=EN[k]};
+  Object.entries(M.cats||{}).forEach(([id,c])=>{fix('cats/'+id+'/name',c.name);fix('cats/'+id+'/tagline',c.tagline)});
+  Object.entries(M.items||{}).forEach(([id,i])=>fix('items/'+id+'/name',i.name));
+  if(/good plants/i.test((M.settings||{}).tagline||''))u['settings/tagline']='Good Vibes';
+  if(Object.keys(u).length)db.ref('menu').update(u)}
+if(db)db.ref('menu').on('value',s=>{M=s.val()||{};toEnglish();st(Object.keys(M.cats||{}).length+' categories','ok');refresh()},e=>st('Read error: '+e.message,'err'));
 
 const moveRow=(kind,id,cat)=>`<div class="row"><button data-a="up" data-kind="${kind}" data-cat="${cat||''}" data-id="${id}">▲ Move up</button><button data-a="down" data-kind="${kind}" data-cat="${cat||''}" data-id="${id}">▼ Move down</button></div>`;
 
@@ -145,7 +152,7 @@ function draw(){
    <button class="hd" data-a="tog" data-id="shop"><span class="chev"></span><span class="nm">Shop settings</span></button>
    ${open.has('shop')?`<div class="bd">
     <label>Menu title<input data-p="settings/title" value="${esc(s.title)}"></label>
-    <label>Tagline<input data-p="settings/tagline" value="${esc(s.tagline)}"></label>
+    <label>Neon sign under the title<input data-p="settings/tagline" value="${esc(s.tagline)}"></label>
     <label>Currency symbol<input data-p="settings/currency" value="${esc(s.currency)}"></label>
     <div class="row"><button class="ghost" data-a="seed">Reset to sample menu</button></div></div>`:''}
   </section>`+sorted(M.cats).map(([id,c])=>{
@@ -214,7 +221,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
   if(a==='up'||a==='down'){const l=sorted(M[kind],v=>kind==='cats'||v.cat===cat),i=l.findIndex(x=>x[0]===id),j=i+(a==='up'?-1:1);
     if(j>=0&&j<l.length)w(db.ref('menu/'+kind).update({[id+'/order']:l[j][1].order,[l[j][0]+'/order']:l[i][1].order}))}
   if(a==='seed'){if(!ask(b,'Tap again – replaces the whole menu'))return;
-    const m={settings:{title:'Cannabis Menu',tagline:'Good plants / Good vibes / Better days',currency:''},cats:{},items:{}};
+    const m={settings:{title:'Cannabis Menu',tagline:'Good Vibes',currency:''},cats:{},items:{}};
     SEED.forEach(([n,t,p,its],ci)=>{const c=db.ref('menu/cats').push().key;m.cats[c]={name:n,tagline:t,order:ci,tiers:p.map((v,i)=>({l:L[i],p:v}))};
       its.forEach(([n2,no,ty],i)=>{m.items[db.ref('menu/items').push().key]={cat:c,name:n2,tags:no.split(','),type:ty,order:i}})});
     w(db.ref('menu').set(m))}
