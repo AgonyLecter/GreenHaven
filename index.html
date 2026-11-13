@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="it"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Green Heaven – Menu</title>
-<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
-<meta name="theme-color" content="#030806">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#030806"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Unbounded:wght@700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -55,10 +55,9 @@ li b{font-weight:700}
 u{text-decoration:none;display:inline-block;font-size:.9rem;padding:.1rem .6rem;margin:.12rem .35rem .12rem 0;border-radius:.5rem;background:rgba(255,255,255,.08);color:rgba(234,247,238,.85)}
 li em{font-style:normal;display:flex;flex-direction:column;align-items:flex-end;min-width:5.5rem}
 li em small{font-size:.85rem;color:var(--c)}
-s{text-decoration:none;font:700 .95rem 'Unbounded',sans-serif;color:var(--a)}
 li.out{opacity:.35}li.out b{text-decoration:line-through}
-#fs{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9;padding:1rem 2rem;border:0;border-radius:3rem;background:var(--g);color:#020503;font:700 1.4rem 'Sora',sans-serif;cursor:pointer}
-body.full #fs{display:none}
+#fs{transition:opacity 1s;position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9;padding:1rem 2rem;border:0;border-radius:3rem;background:var(--g);color:#020503;font:700 1.4rem 'Sora',sans-serif;cursor:pointer}
+body.full #fs{display:none}#fs.gone{opacity:0;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><defs><filter id="smk" x="-20%" y="-30%" width="140%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".007 .012" numOctaves="3" seed="7"><animate attributeName="baseFrequency" dur="45s" values=".007 .012;.011 .018;.007 .012" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="190"/><feGaussianBlur stdDeviation="12"/></filter></defs></svg>
@@ -67,7 +66,7 @@ body.full #fs{display:none}
 <div class="lg"><span style="--c:#3ea8ff">sativa</span><span style="--c:#b56bff">indica</span><span style="--c:#ff4fa0">hybrid</span></div>
 <header><svg class="hl" viewBox="-60 -108 120 168"></svg><div class="tt"><h1 id="t">Green Heaven</h1><p id="tg"></p></div><svg class="hl r" viewBox="-60 -108 120 168"></svg></header>
 <main id="m"></main>
-<button id="fs">Tocca per schermo intero</button>
+<button id="fs">Press OK / tap for full screen</button>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
@@ -95,24 +94,36 @@ s.style.cssText=`--y0:${R(-10,85)}vh;--y1:${R(-10,85)}vh;--r0:${R(-180,180)}deg;
 s.innerHTML=LEAF;(front?fr:fx).appendChild(s)}
 document.querySelectorAll('.hl').forEach(e=>e.innerHTML=LEAF);
 for(let i=0;i<9;i++)mkLeaf(0);for(let i=0;i<3;i++)mkLeaf(1);
-const DEMO={settings:{title:'Green Heaven',tagline:'good plants, better days',currency:'฿'},cats:{a:{name:'Premium Quality',tagline:'Rare genetics, limited supply',order:0,tiers:[{l:'1g',p:420},{l:'3g',p:1000},{l:'5g',p:1500},{l:'10g',p:2500},{l:'28g',p:5600}]},b:{name:'Pop Size',tagline:'Small size, great quality',order:1,tiers:[{l:'1g',p:120},{l:'3g',p:300},{l:'5g',p:450},{l:'10g',p:800},{l:'28g',p:1700}]},c:{name:'Exotic',tagline:'Top tier, limited quantity',order:2,tiers:[{l:'1g',p:250},{l:'3g',p:500},{l:'5g',p:750},{l:'10g',p:1300},{l:'28g',p:3000}]}},items:{1:{cat:'a',name:'Jack Herer',tags:['Fruity','Citrus','Wood'],type:'sativa',order:0},2:{cat:'a',name:'Wedding Cake',tags:['Sweet','Creamy','Earthy'],type:'indica',order:1},3:{cat:'a',name:'Blue Dream',tags:['Berry','Herbal','Pine'],type:'hybrid',order:2},4:{cat:'b',name:'Jet Fuel',tags:['Diesel','Earth','Gassy'],type:'sativa',order:0},5:{cat:'b',name:'Blue Cheese',tags:['Sweet','Blueberry','Funk'],type:'indica',order:1,soldout:true},6:{cat:'c',name:'Super Lemon Haze',tags:['Citrus','Uplifting','Energetic'],type:'sativa',order:0},7:{cat:'c',name:'Purple Queen',tags:['Pine','Citrus','Gas'],type:'indica',order:1},8:{cat:'c',name:'Apple Pie',tags:['Sweet','Creamy','Herbal'],type:'hybrid',order:2,price:'300/g'}}};
+const DEMO={settings:{title:'Green Heaven',tagline:'good plants, better days',currency:'฿'},cats:{a:{name:'Premium Quality',tagline:'Rare genetics, limited supply',order:0,tiers:[{l:'1g',p:420},{l:'3g',p:1000},{l:'5g',p:1500},{l:'10g',p:2500},{l:'28g',p:5600}]},b:{name:'Pop Size',tagline:'Small size, great quality',order:1,tiers:[{l:'1g',p:120},{l:'3g',p:300},{l:'5g',p:450},{l:'10g',p:800},{l:'28g',p:1700}]},c:{name:'Exotic',tagline:'Top tier, limited quantity',order:2,tiers:[{l:'1g',p:250},{l:'3g',p:500},{l:'5g',p:750},{l:'10g',p:1300},{l:'28g',p:3000}]}},items:{1:{cat:'a',name:'Jack Herer',tags:['Fruity','Citrus','Wood'],type:'sativa',order:0},2:{cat:'a',name:'Wedding Cake',tags:['Sweet','Creamy','Earthy'],type:'indica',order:1},3:{cat:'a',name:'Blue Dream',tags:['Berry','Herbal','Pine'],type:'hybrid',order:2},4:{cat:'b',name:'Jet Fuel',tags:['Diesel','Earth','Gassy'],type:'sativa',order:0},5:{cat:'b',name:'Blue Cheese',tags:['Sweet','Blueberry','Funk'],type:'indica',order:1,soldout:true},6:{cat:'c',name:'Super Lemon Haze',tags:['Citrus','Uplifting','Energetic'],type:'sativa',order:0},7:{cat:'c',name:'Purple Queen',tags:['Pine','Citrus','Gas'],type:'indica',order:1},8:{cat:'c',name:'Apple Pie',tags:['Sweet','Creamy','Herbal'],type:'hybrid',order:2}}};
 function draw(M){
   const s=M.settings||{},cur=s.currency||'';
   document.getElementById('t').textContent=s.title||'Green Heaven';
   document.getElementById('tg').textContent=s.tagline||'';
   document.getElementById('m').innerHTML=sorted(M.cats).map(([id,c],n)=>{const its=sorted(M.items,i=>i.cat===id&&!i.hidden);return `
-   <section class="cat" style="--a:${ACC[n%ACC.length]}"><div class="ch"><h2>${esc(c.name)}</h2><small>${its.length} varietà</small></div><div class="tg">${esc(c.tagline)}</div>
+   <section class="cat" style="--a:${ACC[n%ACC.length]}"><div class="ch"><h2>${esc(c.name)}</h2><small>${its.length} strain${its.length===1?'':'s'}</small></div><div class="tg">${esc(c.tagline)}</div>
    <div class="pr">${tiersOf(c).map(t=>`<div><small>${esc(t.l)}</small><b>${cur?`<i>${esc(cur)}</i>`:''}${fmt(t.p)}</b></div>`).join('')}</div>
-   <ul>${its.map(([,i])=>`<li class="${i.soldout?'out':''}" style="--c:${TC[i.type]||'#888'}"><span class="tb"></span><b>${esc(i.name)}</b><span>${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em>${i.soldout?'<small>esaurito</small>':`${i.price?`<s>${esc(i.price)}</s>`:''}<small>${esc(i.type||'')}</small>`}</em></li>`).join('')}</ul></section>`}).join('');
+   <ul>${its.map(([,i])=>`<li class="${i.soldout?'out':''}" style="--c:${TC[i.type]||'#888'}"><span class="tb"></span><b>${esc(i.name)}</b><span>${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em><small>${i.soldout?'sold out':esc(i.type||'')}</small></em></li>`).join('')}</ul></section>`}).join('');
 }
-if(window.firebase){firebase.initializeApp(firebaseConfig);firebase.database().ref('menu').on('value',x=>draw(x.val()||{}))}else draw(DEMO);
+// Shrink the type until every category fits on the screen: a TV cannot scroll.
+function fit(){const h=document.documentElement,m=document.getElementById('m');h.style.fontSize='';
+  let f=parseFloat(getComputedStyle(h).fontSize);
+  for(let n=0;n<80&&m.getBoundingClientRect().bottom>innerHeight-f*.5;n++){f*=.975;h.style.fontSize=f+'px'}}
+addEventListener('resize',fit);if(document.fonts)document.fonts.ready.then(fit);
+let last=DEMO;const show=M=>{last=M;draw(M);fit()};
+if(window.firebase){firebase.initializeApp(firebaseConfig);firebase.database().ref('menu').on('value',x=>show(x.val()||{}))}else show(DEMO);
 
-const isFull=()=>document.fullscreenElement||matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
-const sync=()=>document.body.classList.toggle('full',!!isFull());
-const goFull=()=>{const e=document.documentElement;(e.requestFullscreen||e.webkitRequestFullscreen).call(e,{navigationUI:'hide'}).catch(()=>{});wake()};
+// Full screen: browsers only allow it after a key press or tap, so the first
+// remote/keyboard/touch input triggers it. Installed as an app (manifest.json)
+// the page opens full screen in landscape with no address bar at all.
+const fsBtn=document.getElementById('fs'),root=document.documentElement;
+const isFull=()=>document.fullscreenElement||document.webkitFullscreenElement||matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
+const sync=()=>{document.body.classList.toggle('full',!!isFull());fit()};
 let lock;const wake=async()=>{try{lock=await navigator.wakeLock.request('screen')}catch(e){}};
-document.addEventListener('fullscreenchange',sync);
-['click','keydown','touchend'].forEach(ev=>document.addEventListener(ev,()=>{if(!document.fullscreenElement)goFull()}));
+const goFull=()=>{wake();const rq=root.requestFullscreen||root.webkitRequestFullscreen;if(!rq)return fsBtn.classList.add('gone');
+  Promise.resolve(rq.call(root,{navigationUI:'hide'})).then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{})};
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,sync));
+['click','keydown','touchend'].forEach(ev=>document.addEventListener(ev,()=>{if(!isFull())goFull()}));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)wake()});
-sync();wake();
+sync();goFull();setTimeout(()=>fsBtn.classList.add('gone'),12000);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
