@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Green Heaven – Admin</title>
+<style>
+:root{--bg:#08150e;--card:#12301f;--leaf:#8fdc5a;--txt:#efe6c8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px system-ui,sans-serif;padding:12px 12px 90px}
+h1{color:var(--leaf);font-size:22px;margin:8px 0 14px}h2{font-size:18px;margin:0 0 8px}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:14px}
+label{display:block;font-size:13px;opacity:.75;margin-top:8px}
+input,select{width:100%;padding:11px;border-radius:9px;border:1px solid #2c5a3d;background:#0b1d13;color:var(--txt);font-size:16px}
+.pr{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.pr label{margin:0}
+.item{border-top:1px solid #2c5a3d;margin-top:12px;padding-top:6px}
+.row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.row label{display:flex;gap:6px;align-items:center;margin:0;font-size:14px;opacity:1}.row input[type=checkbox]{width:22px;height:22px}
+button{padding:11px 14px;border-radius:9px;border:0;background:#245c3a;color:var(--txt);font-size:15px}
+button.p{background:var(--leaf);color:#06120c;font-weight:700;width:100%;margin-top:10px}
+button.x{background:#5c2424}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--leaf);color:#06120c;padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;font-weight:600}
+#toast.on{opacity:1}
+</style></head><body>
+<h1>Green Heaven · Admin</h1>
+<div id="app"><div id="list"></div>
+<button class="p" data-a="addcat">Aggiungi categoria</button>
+<button style="margin-top:16px" data-a="seed">Carica menu di esempio</button>
+</div>
+<div id="toast"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyChC37LoVtmMjkptinC6TmJzL-jgz6C30w",
+  authDomain: "greenhaven-bc303.firebaseapp.com",
+  databaseURL: "https://greenhaven-bc303-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "greenhaven-bc303",
+  storageBucket: "greenhaven-bc303.firebasestorage.app",
+  messagingSenderId: "381514844021",
+  appId: "1:381514844021:web:cc946cc5d8afa36294f53c"
+};
+</script>
+<script>
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const T=['g1','g3','g5','g10','g28'],L=['1g','3g','5g','10g','28g'],$=s=>document.querySelector(s);
+const SEED=[
+['Premium Quality','Genetiche rare, quantità limitata',[420,1000,1500,2500,5600],[['Jack Herer','Fruity,Citrus,Wood','sativa'],['Wedding Cake','Sweet,Creamy,Earthy','indica'],['Blue Dream','Berry,Herbal,Pine','hybrid'],['Super Skunk','Earthy,Pungent,Sweet','hybrid']]],
+['Pop Size','Formato piccolo, ottima qualità',[120,300,450,800,1700],[['Jet Fuel','Diesel,Earth,Gassy','sativa'],['Blue Cheese','Sweet,Blueberry,Funk','indica'],['Gelato Cookie','Sweet,Fruity,Citrus','hybrid'],['Atomic','Fuel,Pine,Spicy','hybrid']]],
+['Exotic','Top tier, quantità limitata',[250,500,750,1300,3000],[['Super Lemon Haze','Citrus,Uplifting,Energetic','sativa'],['Frosted Boof','Citrus,Earthy,Funk','sativa'],['Durban Poison','Earthy,Spicy,Clear Mind','sativa'],['Purple Queen','Pine,Citrus,Gas','indica'],['Blueberry Runtz','Blueberry,Sweet,Vanilla','indica'],['Gelato Cake','Vanilla,Berry,Pepper','indica'],['Sunset Sherbet','Citrus,Berry,Creamy','hybrid'],['Sub Cherry Bomb','Cherry,Sweet,Gassy','hybrid'],['MAC 1','Gassy,Earthy,Potent','hybrid'],['Hollywood','Sweet,Citrus,Herbal','hybrid'],['Apple Pie','Sweet,Creamy,Herbal','hybrid']]]];
+let M={};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sorted=(o,f=()=>1)=>Object.entries(o||{}).filter(([,v])=>f(v)).sort((a,b)=>a[1].order-b[1].order);
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
+const w=p=>p.then(()=>toast('Salvato'),e=>toast('Errore: '+e.message));
+
+db.ref('menu').on('value',s=>{M=s.val()||{};if(!document.activeElement.matches('input,select'))draw()});
+
+function draw(){
+  const s=M.settings||{};
+  $('#list').innerHTML=`<section class="card"><h2>Locale</h2>
+   <label>Nome<input data-p="settings/title" value="${esc(s.title)}"></label>
+   <label>Sottotitolo<input data-p="settings/tagline" value="${esc(s.tagline)}"></label>
+   <label>Valuta<input data-p="settings/currency" value="${esc(s.currency)}"></label></section>`+
+  sorted(M.cats).map(([id,c])=>`<section class="card">
+   <label>Categoria<input data-p="cats/${id}/name" value="${esc(c.name)}"></label>
+   <label>Descrizione<input data-p="cats/${id}/tagline" value="${esc(c.tagline)}"></label>
+   <div class="pr">${T.map((k,i)=>`<label>${L[i]}<input type="number" inputmode="numeric" data-p="cats/${id}/prices/${k}" value="${esc((c.prices||{})[k])}"></label>`).join('')}</div>
+   <div class="row"><button data-a="up" data-kind="cats" data-id="${id}">▲</button><button data-a="down" data-kind="cats" data-id="${id}">▼</button><button class="x" data-a="delcat" data-id="${id}">Elimina categoria</button></div>
+   ${sorted(M.items,i=>i.cat===id).map(([iid,i])=>`<div class="item">
+    <input data-p="items/${iid}/name" value="${esc(i.name)}" style="font-weight:700">
+    <label>Note (separate da virgola)<input data-p="items/${iid}/notes" value="${esc(i.notes)}"></label>
+    <div class="row"><select data-p="items/${iid}/type" style="width:auto">${['sativa','indica','hybrid'].map(t=>`<option ${i.type===t?'selected':''}>${t}</option>`).join('')}</select>
+    <label><input type="checkbox" data-p="items/${iid}/soldout" ${i.soldout?'checked':''}>Esaurito</label>
+    <label><input type="checkbox" data-p="items/${iid}/hidden" ${i.hidden?'checked':''}>Nascosto</label></div>
+    <div class="row"><button data-a="up" data-kind="items" data-cat="${id}" data-id="${iid}">▲</button><button data-a="down" data-kind="items" data-cat="${id}" data-id="${iid}">▼</button><button class="x" data-a="delitem" data-id="${iid}">Elimina</button></div></div>`).join('')}
+   <button class="p" data-a="additem" data-cat="${id}">Aggiungi varietà</button></section>`).join('');
+}
+document.addEventListener('change',e=>{const t=e.target;if(!t.dataset.p)return;
+  const v=t.type==='checkbox'?t.checked:t.type==='number'?Number(t.value):t.value.trim();
+  w(db.ref('menu/'+t.dataset.p).set(v)).then(()=>draw())});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const{a,id,cat,kind}=b.dataset;
+  if(a==='addcat')w(db.ref('menu/cats').push({name:'Nuova categoria',tagline:'',order:Date.now(),prices:{g1:0,g3:0,g5:0,g10:0,g28:0}}));
+  if(a==='additem')w(db.ref('menu/items').push({cat,name:'Nuova varietà',notes:'',type:'hybrid',order:Date.now()}));
+  if(a==='delcat'&&confirm('Eliminare categoria e tutte le sue varietà?')){const u={['cats/'+id]:null};Object.entries(M.items||{}).forEach(([k,i])=>i.cat===id&&(u['items/'+k]=null));w(db.ref('menu').update(u))}
+  if(a==='delitem'&&confirm('Eliminare questa varietà?'))w(db.ref('menu/items/'+id).remove());
+  if(a==='up'||a==='down'){const l=sorted(M[kind],v=>kind==='cats'||v.cat===cat),i=l.findIndex(x=>x[0]===id),j=i+(a==='up'?-1:1);
+    if(j>=0&&j<l.length)w(db.ref('menu/'+kind).update({[id+'/order']:l[j][1].order,[l[j][0]+'/order']:l[i][1].order}))}
+  if(a==='seed'&&confirm('Sostituisce tutto il menu attuale. Continuare?')){
+    const m={settings:{title:'Green Heaven',tagline:'Good plants, better days',currency:'฿'},cats:{},items:{}};
+    SEED.forEach(([n,t,p,its],ci)=>{const c=db.ref('menu/cats').push().key;m.cats[c]={name:n,tagline:t,order:ci,prices:Object.fromEntries(T.map((k,i)=>[k,p[i]]))};
+      its.forEach(([n2,no,ty],i)=>{m.items[db.ref('menu/items').push().key]={cat:c,name:n2,notes:no,type:ty,order:i}})});
+    w(db.ref('menu').set(m))}
+});
+</script></body></html>
