@@ -39,25 +39,6 @@ const firebaseConfig = {
   storageBucket: "greenhaven-bc303.firebasestorage.app",
   messagingSenderId: "381514844021",
   appId: "1:381514844021:web:cc946cc5d8afa36294f53c"
-};
-</script>
-<script>
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-const T=['g1','g3','g5','g10','g28'],L=['1g','3g','5g','10g','28g'],$=s=>document.querySelector(s);
-const SEED=[
-['Premium Quality','Genetiche rare, quantità limitata',[420,1000,1500,2500,5600],[['Jack Herer','Fruity,Citrus,Wood','sativa'],['Wedding Cake','Sweet,Creamy,Earthy','indica'],['Blue Dream','Berry,Herbal,Pine','hybrid'],['Super Skunk','Earthy,Pungent,Sweet','hybrid']]],
-['Pop Size','Formato piccolo, ottima qualità',[120,300,450,800,1700],[['Jet Fuel','Diesel,Earth,Gassy','sativa'],['Blue Cheese','Sweet,Blueberry,Funk','indica'],['Gelato Cookie','Sweet,Fruity,Citrus','hybrid'],['Atomic','Fuel,Pine,Spicy','hybrid']]],
-['Exotic','Top tier, quantità limitata',[250,500,750,1300,3000],[['Super Lemon Haze','Citrus,Uplifting,Energetic','sativa'],['Frosted Boof','Citrus,Earthy,Funk','sativa'],['Durban Poison','Earthy,Spicy,Clear Mind','sativa'],['Purple Queen','Pine,Citrus,Gas','indica'],['Blueberry Runtz','Blueberry,Sweet,Vanilla','indica'],['Gelato Cake','Vanilla,Berry,Pepper','indica'],['Sunset Sherbet','Citrus,Berry,Creamy','hybrid'],['Sub Cherry Bomb','Cherry,Sweet,Gassy','hybrid'],['MAC 1','Gassy,Earthy,Potent','hybrid'],['Hollywood','Sweet,Citrus,Herbal','hybrid'],['Apple Pie','Sweet,Creamy,Herbal','hybrid']]]];
-let M={};
-const tiersOf=c=>c.tiers===false?[]:Array.isArray(c.tiers)?c.tiers:c.tiers?Object.values(c.tiers):T.map((k,i)=>({l:L[i],p:(c.prices||{})[k]})).filter(x=>x.p!==undefined);
-const saveTiers=(id,arr)=>w(db.ref('menu/cats/'+id).update({tiers:arr.length?arr:false}));
-const SUG=['Fruity','Sweet','Berry','Gassy','Citrus','Earthy','Pine','Herbal','Funk','Creamy','Spicy','Diesel','Vanilla','Pungent'];
-const tagsOf=i=>Array.isArray(i.tags)?i.tags:String(i.notes||'').split(',').map(x=>x.trim()).filter(Boolean);
-const tagUI=(id,i)=>{const t=tagsOf(i);return `<label>Gusti (tocca per togliere)</label><div class="chips">${t.map(x=>`<button class="chip on" data-a="rmtag" data-id="${id}" data-t="${esc(x)}">${esc(x)} ✕</button>`).join('')}</div><div class="chips">${SUG.filter(x=>!t.includes(x)).map(x=>`<button class="chip" data-a="addtag" data-id="${id}" data-t="${esc(x)}">+ ${x}</button>`).join('')}</div><input placeholder="Altro gusto, poi invio" data-newtag="${id}">`};
-const setTags=(id,n)=>w(db.ref('menu/items/'+id).update({tags:n.length?n:null,notes:null}));
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const sorted=(o,f=()=>1)=>Object.entries(o||{}).filter(([,v])=>f(v)).sort((a,b)=>a[1].order-b[1].order);
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
 const w=p=>p.then(()=>toast('Salvato'),e=>toast('Errore: '+e.message));
 
