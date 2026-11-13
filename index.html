@@ -39,7 +39,7 @@ h1{font:400 5.6rem/1.05 'Titan One',cursive;letter-spacing:.02em;background:line
 @keyframes sway{from{transform:scaleX(var(--s)) rotate(-8deg)}to{transform:scaleX(var(--s)) rotate(8deg)}}
 .lg{position:fixed;top:1.4rem;right:2.4rem;z-index:3;display:flex;gap:1.1rem;font-size:.95rem;color:var(--mute)}
 .lg span{display:flex;align-items:center;gap:.4rem}.lg span::before{content:'';width:.7rem;height:.7rem;border-radius:50%;background:var(--c);box-shadow:0 0 .7rem var(--c)}
-main{padding:0 3.5rem;column-count:2;column-gap:2.4rem;position:relative;z-index:2}
+main{padding:0 3.5rem;column-count:var(--cols,2);column-gap:2.4rem;position:relative;z-index:2}
 .cat{position:relative;overflow:hidden;break-inside:avoid;margin-bottom:1.4rem;padding:1.2rem 1.5rem 1rem;border-radius:1.6rem;background:rgba(255,255,255,.07);box-shadow:0 1.2rem 2.4rem rgba(0,0,0,.45)}
 .cat>*{position:relative;z-index:1}
 .cat::before{content:'';position:absolute;z-index:0;left:50%;top:50%;width:170%;aspect-ratio:1;margin:-85% 0 0 -85%;background:conic-gradient(var(--a),transparent 22%,transparent 50%,var(--a) 50%,transparent 72%);will-change:transform;animation:led 14s linear infinite;animation-delay:var(--d,0s)}
@@ -55,7 +55,9 @@ main{padding:0 3.5rem;column-count:2;column-gap:2.4rem;position:relative;z-index
 .pr small{display:block;font-size:.9rem;color:var(--mute);margin-bottom:.1rem}
 .pr b{font:700 1.3rem 'Unbounded',sans-serif;color:#fff}.pr b i{font:400 .75rem 'Sora';font-style:normal;color:var(--a);margin-right:.15rem}
 ul{list-style:none;padding:0}
-li{display:grid;grid-template-columns:.3rem 13.5rem 1fr auto;align-items:center;gap:1rem;padding:.38rem 0;font-size:1.2rem}
+ul{display:grid;grid-template-columns:.3rem max-content 1fr auto;column-gap:1rem}
+@supports not (grid-template-columns:subgrid){li{grid-template-columns:.3rem 13.5rem 1fr auto}}
+li{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center;gap:1rem;padding:.38rem 0;font-size:1.2rem}
 li+li{border-top:.06rem solid rgba(255,255,255,.06)}
 .tb{height:1.7rem;border-radius:1rem;background:var(--c);box-shadow:0 0 .8rem var(--c)}
 li b{font-weight:700}
@@ -119,11 +121,32 @@ function draw(M){
    <div class="pr">${tiersOf(c).map(t=>`<div><small>${esc(t.l)}</small><b>${cur?`<i>${esc(cur)}</i>`:''}${fmt(t.p)}</b></div>`).join('')}</div>
    <ul>${its.map(([,i])=>`<li class="${i.soldout?'out':''}" style="--c:${TC[i.type]||'#888'}"><span class="tb"></span><b>${esc(tr(i.name))}</b><span>${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em><small>${i.soldout?'sold out':esc(i.type||'')}</small></em></li>`).join('')}</ul></section>`}).join('');
 }
-// Shrink the type until every category fits on the screen: a TV cannot scroll.
-function fit(){const h=document.documentElement,m=document.getElementById('m');h.style.fontSize='';
-  let f=parseFloat(getComputedStyle(h).fontSize);
-  for(let n=0;n<80&&m.getBoundingClientRect().bottom>innerHeight-f*.5;n++){f*=.975;h.style.fontSize=f+'px'}}
-addEventListener('resize',fit);if(document.fonts)document.fonts.ready.then(fit);
+// Fit the whole menu on whatever screen it is shown on (HD, 4K, any ratio, any
+// number of strains): try 1-3 columns, for each find by binary search the biggest
+// text size where nothing spills out vertically or horizontally, keep the best.
+const H=document.documentElement,MAIN=document.getElementById('m');
+const vw=()=>(window.visualViewport?visualViewport.width:0)||innerWidth,vh=()=>(window.visualViewport?visualViewport.height:0)||innerHeight;
+function fits(px){H.style.fontSize=px+'px';
+  if(MAIN.getBoundingClientRect().bottom>vh()-px*.6)return false;
+  if(H.scrollWidth>vw()+1)return false;
+  for(const c of MAIN.querySelectorAll('ul,li,.pr,.ch'))if(c.scrollWidth>c.clientWidth+1)return false;
+  return true}
+let fitting=false;
+function fit(){if(fitting)return;fitting=true;
+  const n=MAIN.children.length,base=Math.min(vw()*.0098,vh()*.0172),opts=n<2?[1]:n<3?[2,1]:[2,3];
+  let best={px:0,cols:opts[0]};
+  for(const cols of opts){H.style.setProperty('--cols',cols);
+    let lo=4,hi=base*1.25;
+    if(!fits(lo)){if(!best.px)best={px:lo,cols};continue}
+    for(let k=0;k<14;k++){const mid=(lo+hi)/2;fits(mid)?lo=mid:hi=mid}
+    if(lo>best.px*1.04)best={px:lo,cols}}
+  H.style.setProperty('--cols',best.cols);H.style.fontSize=best.px+'px';fitting=false}
+let ft;const refit=()=>{clearTimeout(ft);ft=setTimeout(fit,120)};
+addEventListener('resize',refit);addEventListener('orientationchange',refit);
+if(window.visualViewport)visualViewport.addEventListener('resize',refit);
+if(window.ResizeObserver)new ResizeObserver(refit).observe(document.body);
+if(document.fonts){document.fonts.ready.then(fit);document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',refit)}
+setInterval(fit,60000);
 let last=DEMO;const show=M=>{last=M;draw(M);fit()};
 if(window.firebase){firebase.initializeApp(firebaseConfig);firebase.database().ref('menu').on('value',x=>show(x.val()||{}))}else show(DEMO);
 
