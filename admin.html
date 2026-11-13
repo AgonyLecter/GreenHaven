@@ -22,7 +22,8 @@ button.x{background:#5c2424}
 #toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--leaf);color:#06120c;padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;font-weight:600}
 #toast.on{opacity:1}
 </style></head><body>
-<h1>Green Heaven · Admin</h1>
+<h1>Green Heaven · Admin <small style="font-size:12px;opacity:.5">v4</small></h1>
+<div id="st" style="font-size:13px;opacity:.75;margin:-6px 0 12px">Connessione…</div>
 <div id="app"><div id="list"></div>
 <button class="p" data-a="addcat">Aggiungi categoria</button>
 <button style="margin-top:16px" data-a="seed">Carica menu di esempio</button>
@@ -39,10 +40,32 @@ const firebaseConfig = {
   storageBucket: "greenhaven-bc303.firebasestorage.app",
   messagingSenderId: "381514844021",
   appId: "1:381514844021:web:cc946cc5d8afa36294f53c"
+};
+</script>
+<script>
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const T=['g1','g3','g5','g10','g28'],L=['1g','3g','5g','10g','28g'],$=s=>document.querySelector(s);
+const SEED=[
+['Premium Quality','Genetiche rare, quantità limitata',[420,1000,1500,2500,5600],[['Jack Herer','Fruity,Citrus,Wood','sativa'],['Wedding Cake','Sweet,Creamy,Earthy','indica'],['Blue Dream','Berry,Herbal,Pine','hybrid'],['Super Skunk','Earthy,Pungent,Sweet','hybrid']]],
+['Pop Size','Formato piccolo, ottima qualità',[120,300,450,800,1700],[['Jet Fuel','Diesel,Earth,Gassy','sativa'],['Blue Cheese','Sweet,Blueberry,Funk','indica'],['Gelato Cookie','Sweet,Fruity,Citrus','hybrid'],['Atomic','Fuel,Pine,Spicy','hybrid']]],
+['Exotic','Top tier, quantità limitata',[250,500,750,1300,3000],[['Super Lemon Haze','Citrus,Uplifting,Energetic','sativa'],['Frosted Boof','Citrus,Earthy,Funk','sativa'],['Durban Poison','Earthy,Spicy,Clear Mind','sativa'],['Purple Queen','Pine,Citrus,Gas','indica'],['Blueberry Runtz','Blueberry,Sweet,Vanilla','indica'],['Gelato Cake','Vanilla,Berry,Pepper','indica'],['Sunset Sherbet','Citrus,Berry,Creamy','hybrid'],['Sub Cherry Bomb','Cherry,Sweet,Gassy','hybrid'],['MAC 1','Gassy,Earthy,Potent','hybrid'],['Hollywood','Sweet,Citrus,Herbal','hybrid'],['Apple Pie','Sweet,Creamy,Herbal','hybrid']]]];
+let M={};
+const ask=(b,msg)=>{if(b.dataset.armed)return true;const o=b.textContent;b.dataset.armed=1;b.textContent=msg;setTimeout(()=>{delete b.dataset.armed;b.textContent=o},4000);return false};
+const tiersOf=c=>c.tiers===false?[]:Array.isArray(c.tiers)?c.tiers:c.tiers?Object.values(c.tiers):T.map((k,i)=>({l:L[i],p:(c.prices||{})[k]})).filter(x=>x.p!==undefined);
+const saveTiers=(id,arr)=>w(db.ref('menu/cats/'+id).update({tiers:arr.length?arr:false}));
+const SUG=['Fruity','Sweet','Berry','Gassy','Citrus','Earthy','Pine','Herbal','Funk','Creamy','Spicy','Diesel','Vanilla','Pungent'];
+const tagsOf=i=>Array.isArray(i.tags)?i.tags:String(i.notes||'').split(',').map(x=>x.trim()).filter(Boolean);
+const tagUI=(id,i)=>{const t=tagsOf(i);return `<label>Gusti (tocca per togliere)</label><div class="chips">${t.map(x=>`<button class="chip on" data-a="rmtag" data-id="${id}" data-t="${esc(x)}">${esc(x)} ✕</button>`).join('')}</div><div class="chips">${SUG.filter(x=>!t.includes(x)).map(x=>`<button class="chip" data-a="addtag" data-id="${id}" data-t="${esc(x)}">+ ${x}</button>`).join('')}</div><input placeholder="Altro gusto, poi invio" data-newtag="${id}">`};
+const setTags=(id,n)=>w(db.ref('menu/items/'+id).update({tags:n.length?n:null,notes:null}));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sorted=(o,f=()=>1)=>Object.entries(o||{}).filter(([,v])=>f(v)).sort((a,b)=>a[1].order-b[1].order);
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
 const w=p=>p.then(()=>toast('Salvato'),e=>toast('Errore: '+e.message));
 
-db.ref('menu').on('value',s=>{M=s.val()||{};if(!document.activeElement.matches('input,select'))draw()});
+const status=m=>{$('#st').textContent=m};
+function safeDraw(){try{draw()}catch(e){$('#list').innerHTML='<div class="card"><h2>Errore nel menu</h2>'+esc(e.message)+'</div>'}}
+db.ref('menu').on('value',s=>{M=s.val()||{};status('Connesso · '+Object.keys(M.cats||{}).length+' categorie');if(!document.activeElement.matches('input,select'))safeDraw()},e=>status('Errore lettura: '+e.message));
 
 function draw(){
   const s=M.settings||{};
@@ -66,21 +89,21 @@ function draw(){
 }
 document.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.tier){const[id,i,f]=t.dataset.tier.split(':'),arr=tiersOf(M.cats[id]).map(x=>({...x})),v=t.value.trim();arr[i][f]=f==='p'&&v!==''&&!isNaN(v)?Number(v):v;saveTiers(id,arr);return}
-  if(t.dataset.newtag){const id=t.dataset.newtag,v=t.value.trim();t.value='';if(v)setTags(id,[...tagsOf(M.items[id]),v]);draw();return}
+  if(t.dataset.newtag){const id=t.dataset.newtag,v=t.value.trim();t.value='';if(v)setTags(id,[...tagsOf(M.items[id]),v]);safeDraw();return}
   if(!t.dataset.p)return;
   const v=t.type==='checkbox'?t.checked:t.type==='number'?Number(t.value):t.value.trim();
-  w(db.ref('menu/'+t.dataset.p).set(v)).then(()=>draw())});
+  w(db.ref('menu/'+t.dataset.p).set(v)).then(()=>safeDraw())});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const{a,id,cat,kind}=b.dataset;
   if(a==='addcat')w(db.ref('menu/cats').push({name:'Nuova categoria',tagline:'',order:Date.now(),tiers:L.map(l=>({l,p:0}))}));
   if(a==='additem')w(db.ref('menu/items').push({cat,name:'Nuova varietà',type:'hybrid',order:Date.now()}));
-  if(a==='delcat'&&confirm('Eliminare categoria e tutte le sue varietà?')){const u={['cats/'+id]:null};Object.entries(M.items||{}).forEach(([k,i])=>i.cat===id&&(u['items/'+k]=null));w(db.ref('menu').update(u))}
-  if(a==='delitem'&&confirm('Eliminare questa varietà?'))w(db.ref('menu/items/'+id).remove());
+  if(a==='delcat'&&ask(b,'Tocca ancora per confermare')){const u={['cats/'+id]:null};Object.entries(M.items||{}).forEach(([k,i])=>i.cat===id&&(u['items/'+k]=null));w(db.ref('menu').update(u))}
+  if(a==='delitem'&&ask(b,'Tocca ancora per confermare'))w(db.ref('menu/items/'+id).remove());
   if(a==='addtag'||a==='rmtag'){const cur=tagsOf(M.items[id]),t=b.dataset.t;setTags(id,a==='addtag'?[...cur,t]:cur.filter(x=>x!==t))}
   if(a==='addtier')saveTiers(id,[...tiersOf(M.cats[id]),{l:'',p:0}]);
   if(a==='deltier')saveTiers(id,tiersOf(M.cats[id]).filter((_,k)=>k!==Number(b.dataset.i)));
   if(a==='up'||a==='down'){const l=sorted(M[kind],v=>kind==='cats'||v.cat===cat),i=l.findIndex(x=>x[0]===id),j=i+(a==='up'?-1:1);
     if(j>=0&&j<l.length)w(db.ref('menu/'+kind).update({[id+'/order']:l[j][1].order,[l[j][0]+'/order']:l[i][1].order}))}
-  if(a==='seed'&&confirm('Sostituisce tutto il menu attuale. Continuare?')){
+  if(a==='seed'&&ask(b,'Tocca ancora per confermare')){
     const m={settings:{title:'Green Heaven',tagline:'Good plants, better days',currency:'฿'},cats:{},items:{}};
     SEED.forEach(([n,t,p,its],ci)=>{const c=db.ref('menu/cats').push().key;m.cats[c]={name:n,tagline:t,order:ci,tiers:p.map((v,i)=>({l:L[i],p:v}))};
       its.forEach(([n2,no,ty],i)=>{m.items[db.ref('menu/items').push().key]={cat:c,name:n2,tags:no.split(','),type:ty,order:i}})});
