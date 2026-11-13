@@ -115,7 +115,7 @@ const SEED=[
 ['Pop Size','Small size / Great quality / Everyday vibes',[120,300,450,800,1700],[['Jet Fuel','Diesel,Earth,Gassy','sativa'],['Blue Cheese','Sweet,Blueberry,Funk','indica'],['Gelato Cookie','Sweet,Fruity,Citrus','hybrid'],['Atomic','Fuel,Pine,Spicy','hybrid']]],
 ['Exotic','Exotic strains / Limited quantity / Top tier',[250,500,750,1300,3000],[['Super Lemon Haze','Citrus,Uplifting,Energetic','sativa'],['Frosted Boof','Citrus,Earthy,Funk','sativa'],['Durban Poison','Earthy,Spicy,Clear Mind','sativa'],['Purple Queen','Pine,Citrus,Gas','indica'],['Blueberry Runtz','Blueberry,Sweet,Vanilla','indica'],['Gelato Cake','Vanilla,Berry,Pepper','indica'],['Sunset Sherbet','Citrus,Berry,Creamy','hybrid'],['Sub Cherry Bomb','Cherry,Sweet,Gassy','hybrid'],['MAC 1','Gassy,Earthy,Potent','hybrid'],['Hollywood','Sweet,Citrus,Herbal','hybrid'],['Apple Pie','Sweet,Creamy,Herbal','hybrid']]]];
 
-let M={},edit=null,dirty=false;
+let M={},edit=null,draft=null,dirty=false,shifted=0;
 // which panels are expanded (category ids, 'shop', 'set:<id>') – remembered on this phone
 let open=new Set();try{open=new Set(JSON.parse(localStorage.getItem('gh-open')||'[]'))}catch(e){}
 const keep=()=>{try{localStorage.setItem('gh-open',JSON.stringify([...open]))}catch(e){}};
@@ -159,10 +159,10 @@ function draw(){
     <label>Currency symbol<input data-p="settings/currency" value="${esc(s.currency)}"></label>
     <div class="row"><button class="ghost" data-a="seed">Reset to sample menu</button></div></div>`:''}
   </section>`+sorted(M.cats).map(([id,c])=>{
-    const its=sorted(M.items,i=>i.cat===id),so=open.has('set:'+id);
-    if(!open.has(id))return `<section class="card"><button class="hd" data-a="tog" data-id="${id}"><span class="chev"></span><span class="nm">${esc(c.name)||'Untitled'}</span><span class="ct">${its.length} strain${its.length===1?'':'s'}</span></button></section>`;
+    const its=sorted(M.items,i=>i.cat===id),so=open.has('set:'+id),vis=its.filter(([,i])=>!i.hidden).length;
+    if(!open.has(id))return `<section class="card"><button class="hd" data-a="tog" data-id="${id}"><span class="chev"></span><span class="nm">${esc(c.name)||'Untitled'}</span><span class="ct">${vis?its.length+' strain'+(its.length===1?'':'s'):'Empty · not on TV'}</span></button></section>`;
     return `<section class="card open">
-   <button class="hd" data-a="tog" data-id="${id}"><span class="chev"></span><span class="nm">${esc(c.name)||'Untitled'}</span><span class="ct">${its.length} strain${its.length===1?'':'s'}</span></button>
+   <button class="hd" data-a="tog" data-id="${id}"><span class="chev"></span><span class="nm">${esc(c.name)||'Untitled'}</span><span class="ct">${vis?its.length+' strain'+(its.length===1?'':'s'):'Empty · not on TV'}</span></button>
    <div class="bd">
     <h3>Prices for this category</h3>
     <div class="tiers">${tiersOf(c).map((t,i)=>`<div class="tier"><input data-tier="${id}:${i}:l" value="${esc(t.l)}" placeholder="size" aria-label="Size"><input data-tier="${id}:${i}:p" inputmode="decimal" value="${esc(t.p)}" placeholder="price" aria-label="Price"><button class="tx" data-a="deltier" data-id="${id}" data-i="${i}" aria-label="Remove size">✕</button></div>`).join('')}<button class="tier add" data-a="addtier" data-id="${id}">+ Size</button></div>
@@ -177,7 +177,17 @@ function draw(){
    </div></section>`}).join('');
 }
 
+// Creating something always goes through a form with a name and an explicit
+// Create button: nothing is written by a single (possibly accidental) tap.
+function drawDraft(){const c=draft.k==='cat',sh=$('#sheet');
+  $('#sh').innerHTML=`<h3 style="margin-top:4px">${c?'New category':'New strain in '+esc((M.cats[draft.cat]||{}).name||'')}</h3>
+   <input class="big" id="dn" value="${esc(draft.name)}" placeholder="${c?'Category name':'Strain name'}" aria-label="Name" enterkeyhint="done" autocomplete="off">
+   ${c?`<label>Description (optional)<input id="dd" value="${esc(draft.tagline)}" autocomplete="off"></label>`
+      :`<h3>Type</h3><div class="seg">${TYPES.map(x=>`<button data-a="dtype" data-t="${x}" class="${draft.type===x?'on':''}" style="--c:${TC[x]}">${x}</button>`).join('')}</div>`}
+   <div class="row"><button class="ghost" data-a="close">Cancel</button><button class="p" data-a="${c?'createcat':'createitem'}">Create</button></div>`;
+  sh.hidden=false;document.body.classList.add('lock')}
 function drawSheet(){
+  if(draft)return drawDraft();
   const i=edit&&(M.items||{})[edit],sh=$('#sheet');
   if(!i){edit=null;sh.hidden=true;document.body.classList.remove('lock');return}
   const t=tagsOf(i);
@@ -196,6 +206,7 @@ function drawSheet(){
 
 function newTag(){const e=$('#nt'),v=e&&e.value.trim();if(!v)return;const cur=tagsOf(M.items[edit]);e.value='';if(!cur.includes(v))setTags(edit,[...cur,v]);refresh(true);const n=$('#nt');n&&n.focus()}
 
+document.addEventListener('input',e=>{if(!draft)return;if(e.target.id==='dn')draft.name=e.target.value;if(e.target.id==='dd')draft.tagline=e.target.value});
 document.addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.matches('input'))return;
   if(e.target.id==='nt'){e.preventDefault();newTag()}else e.target.blur()});
 
@@ -204,16 +215,31 @@ document.addEventListener('change',e=>{const t=e.target;
     arr[i][f]=f==='p'&&v!==''&&!isNaN(v)?Number(v):t.value.trim();saveTiers(id,arr);return}
   if(t.dataset.p)w(db.ref('menu/'+t.dataset.p).set(t.value.trim()))});
 
+// Taps that land right after the screen changed (sheet opened/closed, card folded,
+// keyboard closed) are ignored for anything that creates or deletes: that is how a
+// quick double tap on "Done" used to hit the "+ Add" button underneath.
+const RISKY=new Set(['addcat','additem','delcat','delitem','deltier','seed']);
+document.addEventListener('focusout',()=>shifted=Date.now(),true);
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;
   const a=b.dataset.a,{cat,kind}=b.dataset,id=b.dataset.id||edit,F=document.activeElement;
+  if(RISKY.has(a)&&Date.now()-shifted<600)return;
   if(a==='newtag')return newTag();
   if(F&&F.matches('input'))F.blur(); // commit whatever is being typed first
+  if(a==='tog'||a==='collapse'||a==='close'||a==='edit')shifted=Date.now();
   if(a==='tog'){open.has(id)?open.delete(id):open.add(id);keep()}
   if(a==='collapse'){open.clear();keep();scrollTo(0,0)}
   if(a==='edit')edit=id;
-  if(a==='close')edit=null;
-  if(a==='addcat'){const r=db.ref('menu/cats').push();open.add(r.key);open.add('set:'+r.key);keep();w(r.set({name:'New category',tagline:'',order:Date.now(),tiers:L.map(l=>({l,p:0}))}))}
-  if(a==='additem'){const r=db.ref('menu/items').push();edit=r.key;w(r.set({cat,name:'New strain',type:'hybrid',order:Date.now()}));refresh(true);const n=$('#sh input');n.focus();n.select();return}
+  if(a==='close'){edit=null;draft=null}
+  if(a==='addcat'||a==='additem'){draft=a==='addcat'?{k:'cat',name:'',tagline:''}:{k:'item',cat,name:'',type:'hybrid'};shifted=Date.now();refresh(true);const n=$('#dn');n&&n.focus();return}
+  if(a==='dtype'){draft.type=b.dataset.t;refresh(true);return}
+  if(a==='createcat'||a==='createitem'){const name=(draft.name||'').trim().replace(/\s+/g,' ');
+    if(!name){toast('Type a name first');refresh(true);$('#dn').focus();return}
+    const same=Object.values((a==='createcat'?M.cats:M.items)||{}).some(x=>String(x.name||'').trim().toLowerCase()===name.toLowerCase()&&(a==='createcat'||x.cat===draft.cat));
+    if(same){toast('“'+name+'” already exists');refresh(true);return}
+    if(a==='createcat'){const r=db.ref('menu/cats').push();open.add(r.key);keep();
+      w(r.set({name,tagline:(draft.tagline||'').trim(),order:Date.now(),createdAt:Date.now(),tiers:L.map(l=>({l,p:0}))}))}
+    else{const r=db.ref('menu/items').push();edit=r.key;w(r.set({cat:draft.cat,name,type:draft.type,order:Date.now(),createdAt:Date.now()}))}
+    draft=null;shifted=Date.now()}
   if(a==='sold'||a==='flag'){const f=a==='sold'?'soldout':b.dataset.f;w(db.ref('menu/items/'+id+'/'+f).set(M.items[id][f]?null:true))}
   if(a==='type')w(db.ref('menu/items/'+id+'/type').set(b.dataset.t));
   if(a==='addtag'||a==='rmtag'){const cur=tagsOf(M.items[id]),t=b.dataset.t;setTags(id,a==='addtag'?[...cur,t]:cur.filter(x=>x!==t))}
