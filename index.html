@@ -55,6 +55,16 @@ li b{font-weight:700}
 u{text-decoration:none;display:inline-block;font-size:.9rem;padding:.1rem .6rem;margin:.12rem .35rem .12rem 0;border-radius:.5rem;background:rgba(255,255,255,.08);color:rgba(234,247,238,.85)}
 li em{font-style:normal;display:flex;flex-direction:column;align-items:flex-end;min-width:5.5rem}
 li em small{font-size:.85rem;color:var(--c)}
+/* LED light travelling around each category border */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+.cat::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:.14rem;pointer-events:none;background:conic-gradient(from var(--ang),transparent 0 74%,var(--a) 88%,#fff 93%,var(--a) 96%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;filter:drop-shadow(0 0 .35rem var(--a));animation:led 9s linear infinite;animation-delay:var(--d,0s)}
+@keyframes led{to{--ang:360deg}}
+/* a flavour tag catches the light now and then */
+u{position:relative;overflow:hidden;vertical-align:middle}
+u.sh{animation:glow 1.8s ease-in-out}
+u.sh::after{content:'';position:absolute;top:0;bottom:0;left:0;width:60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:sweep 1.8s ease-in-out}
+@keyframes sweep{from{transform:translateX(-120%)}to{transform:translateX(290%)}}
+@keyframes glow{50%{background:rgba(198,255,77,.22);color:#fff;box-shadow:0 0 .7rem rgba(198,255,77,.35)}}
 li.out{opacity:.35}li.out b{text-decoration:line-through}
 #fs{transition:opacity 1s;position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9;padding:1rem 2rem;border:0;border-radius:3rem;background:var(--g);color:#020503;font:700 1.4rem 'Sora',sans-serif;cursor:pointer}
 body.full #fs{display:none}#fs.gone{opacity:0;pointer-events:none}
@@ -100,7 +110,7 @@ function draw(M){
   document.getElementById('t').textContent=s.title||'Green Heaven';
   document.getElementById('tg').textContent=s.tagline||'';
   document.getElementById('m').innerHTML=sorted(M.cats).map(([id,c],n)=>{const its=sorted(M.items,i=>i.cat===id&&!i.hidden);return `
-   <section class="cat" style="--a:${ACC[n%ACC.length]}"><div class="ch"><h2>${esc(c.name)}</h2><small>${its.length} strain${its.length===1?'':'s'}</small></div><div class="tg">${esc(c.tagline)}</div>
+   <section class="cat" style="--a:${ACC[n%ACC.length]};--d:${-n*2.3}s"><div class="ch"><h2>${esc(c.name)}</h2><small>${its.length} strain${its.length===1?'':'s'}</small></div><div class="tg">${esc(c.tagline)}</div>
    <div class="pr">${tiersOf(c).map(t=>`<div><small>${esc(t.l)}</small><b>${cur?`<i>${esc(cur)}</i>`:''}${fmt(t.p)}</b></div>`).join('')}</div>
    <ul>${its.map(([,i])=>`<li class="${i.soldout?'out':''}" style="--c:${TC[i.type]||'#888'}"><span class="tb"></span><b>${esc(i.name)}</b><span>${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em><small>${i.soldout?'sold out':esc(i.type||'')}</small></em></li>`).join('')}</ul></section>`}).join('');
 }
@@ -111,6 +121,10 @@ function fit(){const h=document.documentElement,m=document.getElementById('m');h
 addEventListener('resize',fit);if(document.fonts)document.fonts.ready.then(fit);
 let last=DEMO;const show=M=>{last=M;draw(M);fit()};
 if(window.firebase){firebase.initializeApp(firebaseConfig);firebase.database().ref('menu').on('value',x=>show(x.val()||{}))}else show(DEMO);
+
+// Every couple of seconds one random flavour tag shimmers.
+setInterval(()=>{const t=document.querySelectorAll('li:not(.out) u');if(!t.length)return;const e=t[Math.random()*t.length|0];
+  e.classList.add('sh');setTimeout(()=>e.classList.remove('sh'),1900)},2200);
 
 // Full screen: browsers only allow it after a key press or tap, so the first
 // remote/keyboard/touch input triggers it. Installed as an app (manifest.json)
