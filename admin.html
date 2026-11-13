@@ -1,33 +1,63 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Green Heaven – Admin</title>
+<title>Green Heaven – Menu</title>
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
+<meta name="theme-color" content="#04120a">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#08150e;--card:#12301f;--leaf:#8fdc5a;--txt:#efe6c8}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font:16px system-ui,sans-serif;padding:12px 12px 90px}
-h1{color:var(--leaf);font-size:22px;margin:8px 0 14px}h2{font-size:18px;margin:0 0 8px}
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:14px}
-label{display:block;font-size:13px;opacity:.75;margin-top:8px}
-input,select{width:100%;padding:11px;border-radius:9px;border:1px solid #2c5a3d;background:#0b1d13;color:var(--txt);font-size:16px}
-.pr{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.pr label{margin:0}
-.item{border-top:1px solid #2c5a3d;margin-top:12px;padding-top:6px}
-.row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
-.row label{display:flex;gap:6px;align-items:center;margin:0;font-size:14px;opacity:1}.row input[type=checkbox]{width:22px;height:22px}
-button{padding:11px 14px;border-radius:9px;border:0;background:#245c3a;color:var(--txt);font-size:15px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chip{padding:7px 12px;border-radius:20px;background:#0b1d13;border:1px solid #2c5a3d;font-size:14px}.chip.on{background:var(--leaf);color:#06120c;font-weight:600}
-button.p{background:var(--leaf);color:#06120c;font-weight:700;width:100%;margin-top:10px}
-button.x{background:#5c2424}
-#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--leaf);color:#06120c;padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;font-weight:600}
-#toast.on{opacity:1}
+:root{--g:#39ff14;--lime:#d8ff7a;--txt:#eaffe4}
+*{box-sizing:border-box;margin:0}
+html{font-size:min(.92vw,1.62vh)}
+body{background:radial-gradient(90% 70% at 50% 0,#0e3d1c,#04120a 55%,#010402);color:var(--txt);font-family:'DM Sans',sans-serif;height:100vh;overflow:hidden;position:relative;cursor:none}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:6;background:radial-gradient(120% 100% at 50% 40%,transparent 55%,rgba(0,0,0,.65))}
+.fx,.fr{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.fx{z-index:0}.fr{z-index:4}
+.pl{position:absolute;left:0;top:0;animation:pass linear infinite}
+@keyframes pass{from{transform:translate(-25vw,var(--y0)) rotate(var(--r0))}to{transform:translate(115vw,var(--y1)) rotate(var(--r1))}}
+.sw{position:absolute;left:0;right:0;bottom:-15vh;height:85vh;filter:url(#smk)}
+.sw i{position:absolute;bottom:0;width:40vw;height:40vw;border-radius:50%;background:radial-gradient(closest-side,rgba(215,255,220,.3),rgba(120,255,150,.1) 60%,transparent);animation:smk 24s linear infinite}
+.sw i:nth-child(1){left:-8vw}.sw i:nth-child(2){left:18vw;animation-delay:-8s;animation-duration:30s}.sw i:nth-child(3){left:44vw;animation-delay:-15s}.sw i:nth-child(4){left:68vw;animation-delay:-4s;animation-duration:34s}.sw i:nth-child(5){left:32vw;animation-delay:-20s;animation-duration:28s}
+@keyframes smk{0%{transform:translate(0,12vh) scale(.6);opacity:0}20%{opacity:1}100%{transform:translate(6vw,-75vh) scale(1.5);opacity:0}}
+header{display:flex;justify-content:center;align-items:center;gap:2.5rem;padding:1.3rem 0 .8rem;position:relative;z-index:2}
+.tt{text-align:center}
+h1{font:400 5.6rem/1.1 'Shrikhand',cursive;background:linear-gradient(100deg,#f4ffc2 0%,#b8ff5a 28%,#3ddc5a 52%,#0f9a3a 76%,#b8ff5a 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite;filter:drop-shadow(0 .12rem 0 #0a5a1f) drop-shadow(0 .3rem 0 #063b14) drop-shadow(0 0 1.6rem rgba(57,255,20,.45));padding:0 .4rem}
+@keyframes shine{to{background-position:-200% 0}}
+header p{font:500 1.25rem 'DM Sans',sans-serif;letter-spacing:.22em;color:#9be8a0;margin-top:.1rem}
+.hl{width:5.5rem;color:#43d15a;filter:drop-shadow(0 0 1rem rgba(57,255,20,.5));animation:sway 6s ease-in-out infinite alternate;--s:1}
+.hl.r{--s:-1}
+@keyframes sway{from{transform:scaleX(var(--s)) rotate(-8deg)}to{transform:scaleX(var(--s)) rotate(8deg)}}
+main{padding:0 4rem;column-count:2;column-gap:2.6rem;position:relative;z-index:2}
+.cat{break-inside:avoid;margin-bottom:1.5rem;padding:1.1rem 1.5rem;background:rgba(3,14,7,.8);border:.1rem solid rgba(143,255,120,.3);border-radius:1.5rem;box-shadow:0 0 2.5rem rgba(57,255,20,.12),inset 0 0 2rem rgba(57,255,20,.05);backdrop-filter:blur(6px)}
+.cat h2{font:400 2.3rem 'Shrikhand',cursive;color:#c8ff8a;text-shadow:0 0 1rem rgba(57,255,20,.45)}
+.cat .tg{font-size:1rem;opacity:.6;margin-bottom:.5rem}
+.pr{display:grid;grid-template-columns:repeat(5,1fr);margin:.4rem 0 .6rem;padding:.4rem 0;border-block:.1rem solid rgba(143,255,120,.25)}
+.pr div{text-align:center}.pr small{display:block;font-size:.95rem;opacity:.65}
+.pr b{font:400 1.6rem 'Shrikhand',cursive;color:var(--lime)}
+ul{list-style:none;padding:0}
+li{display:grid;grid-template-columns:13rem 1fr 11rem;align-items:center;gap:1rem;padding:.42rem 0;font-size:1.2rem;border-top:.06rem solid rgba(234,255,228,.09)}
+li b{font-weight:700;color:#fff}
+u{text-decoration:none;display:inline-block;font-size:.95rem;padding:.05rem .75rem;margin:.15rem .4rem .15rem 0;border-radius:2rem;border:.08rem solid rgba(143,255,120,.5);background:rgba(57,255,20,.09);color:#bfffa8}
+s{text-decoration:none;color:var(--lime);font:400 1.2rem 'Shrikhand',cursive;margin-right:.5rem}
+li em{font-style:normal;font-size:1rem;display:flex;align-items:center;gap:.4rem;justify-content:flex-end;flex-wrap:wrap}
+.d{width:.9rem;height:.9rem;border-radius:50%;background:var(--c);box-shadow:0 0 .8rem var(--c)}
+.sativa{--c:#3ea8ff}.indica{--c:#b56bff}.hybrid{--c:#ff4fa0}
+li.out{opacity:.35}li.out b{text-decoration:line-through}
+#fs{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9;padding:1rem 2rem;border:0;border-radius:3rem;background:var(--g);color:#020503;font:700 1.4rem 'DM Sans',sans-serif;cursor:pointer}
+body.full #fs{display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style></head><body>
-<h1>Green Heaven · Admin</h1>
-<div id="app"><div id="list"></div>
-<button class="p" data-a="addcat">Aggiungi categoria</button>
-<button style="margin-top:16px" data-a="seed">Carica menu di esempio</button>
-</div>
-<div id="toast"></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+<path id="lt" d="M0.0 0.0 L0.0 -0.0 L6.7 -8.7 L5.3 -11.1 L10.6 -19.8 L7.7 -22.2 L12.4 -30.9 L8.7 -33.3 L12.6 -42.0 L8.7 -44.4 L11.6 -53.1 L7.8 -55.6 L9.7 -64.2 L6.3 -66.7 L7.1 -75.3 L4.4 -77.8 L4.2 -86.4 L2.2 -88.9 L1.1 -97.6 L0.0 -100.0 L-1.1 -97.6 L-2.2 -88.9 L-4.2 -86.4 L-4.4 -77.8 L-7.1 -75.3 L-6.3 -66.7 L-9.7 -64.2 L-7.8 -55.6 L-11.6 -53.1 L-8.7 -44.4 L-12.6 -42.0 L-8.7 -33.3 L-12.4 -30.9 L-7.7 -22.2 L-10.6 -19.8 L-5.3 -11.1 L-6.7 -8.7 L-0.0 -0.0Z"/><path id="lv" d="M0 0L0 -96.0M0 -10.0L4.8 -19.0M0 -10.0L-4.8 -19.0M0 -20.0L7.2 -29.0M0 -20.0L-7.2 -29.0M0 -30.0L8.3 -39.0M0 -30.0L-8.3 -39.0M0 -40.0L8.6 -49.0M0 -40.0L-8.6 -49.0M0 -50.0L8.1 -59.0M0 -50.0L-8.1 -59.0M0 -60.0L7.1 -69.0M0 -60.0L-7.1 -69.0M0 -70.0L5.6 -79.0M0 -70.0L-5.6 -79.0M0 -80.0L3.9 -89.0M0 -80.0L-3.9 -89.0" fill="none" stroke="#002a0c" stroke-opacity=".45" stroke-width="1.1"/>
+<symbol id="lf" viewBox="-60 -108 120 168"><g fill="currentColor"><path d="M-1.6 0L-1 50L1 50L1.6 0Z"/><use href="#lt" transform="rotate(0) scale(0.95,1.00)"/><use href="#lt" transform="rotate(27) scale(0.84,0.88)"/><use href="#lt" transform="rotate(-27) scale(0.84,0.88)"/><use href="#lt" transform="rotate(55) scale(0.63,0.66)"/><use href="#lt" transform="rotate(-55) scale(0.63,0.66)"/><use href="#lt" transform="rotate(82) scale(0.40,0.42)"/><use href="#lt" transform="rotate(-82) scale(0.40,0.42)"/></g><use href="#lv" transform="rotate(0) scale(0.95,1.00)"/><use href="#lv" transform="rotate(27) scale(0.84,0.88)"/><use href="#lv" transform="rotate(-27) scale(0.84,0.88)"/><use href="#lv" transform="rotate(55) scale(0.63,0.66)"/><use href="#lv" transform="rotate(-55) scale(0.63,0.66)"/><use href="#lv" transform="rotate(82) scale(0.40,0.42)"/><use href="#lv" transform="rotate(-82) scale(0.40,0.42)"/></symbol>
+<filter id="smk" x="-20%" y="-30%" width="140%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".007 .012" numOctaves="3" seed="7"><animate attributeName="baseFrequency" dur="45s" values=".007 .012;.011 .018;.007 .012" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="190"/><feGaussianBlur stdDeviation="12"/></filter>
+</defs></svg>
+<div class="fx" id="fx"><div class="sw"><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="fr" id="fr"></div>
+<header><svg class="hl" viewBox="-60 -108 120 168"><use href="#lf"/></svg><div class="tt"><h1 id="t" data-text="Green Heaven">Green Heaven</h1><p id="tg"></p></div><svg class="hl r" viewBox="-60 -108 120 168"><use href="#lf"/></svg></header>
+<main id="m"></main>
+<button id="fs">Tocca per schermo intero</button>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
@@ -42,62 +72,32 @@ const firebaseConfig = {
 };
 </script>
 <script>
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-const T=['g1','g3','g5','g10','g28'],L=['1g','3g','5g','10g','28g'],$=s=>document.querySelector(s);
-const SEED=[
-['Premium Quality','Genetiche rare, quantità limitata',[420,1000,1500,2500,5600],[['Jack Herer','Fruity,Citrus,Wood','sativa'],['Wedding Cake','Sweet,Creamy,Earthy','indica'],['Blue Dream','Berry,Herbal,Pine','hybrid'],['Super Skunk','Earthy,Pungent,Sweet','hybrid']]],
-['Pop Size','Formato piccolo, ottima qualità',[120,300,450,800,1700],[['Jet Fuel','Diesel,Earth,Gassy','sativa'],['Blue Cheese','Sweet,Blueberry,Funk','indica'],['Gelato Cookie','Sweet,Fruity,Citrus','hybrid'],['Atomic','Fuel,Pine,Spicy','hybrid']]],
-['Exotic','Top tier, quantità limitata',[250,500,750,1300,3000],[['Super Lemon Haze','Citrus,Uplifting,Energetic','sativa'],['Frosted Boof','Citrus,Earthy,Funk','sativa'],['Durban Poison','Earthy,Spicy,Clear Mind','sativa'],['Purple Queen','Pine,Citrus,Gas','indica'],['Blueberry Runtz','Blueberry,Sweet,Vanilla','indica'],['Gelato Cake','Vanilla,Berry,Pepper','indica'],['Sunset Sherbet','Citrus,Berry,Creamy','hybrid'],['Sub Cherry Bomb','Cherry,Sweet,Gassy','hybrid'],['MAC 1','Gassy,Earthy,Potent','hybrid'],['Hollywood','Sweet,Citrus,Herbal','hybrid'],['Apple Pie','Sweet,Creamy,Herbal','hybrid']]]];
-let M={};
-const SUG=['Fruity','Sweet','Berry','Gassy','Citrus','Earthy','Pine','Herbal','Funk','Creamy','Spicy','Diesel','Vanilla','Pungent'];
-const tagsOf=i=>Array.isArray(i.tags)?i.tags:String(i.notes||'').split(',').map(x=>x.trim()).filter(Boolean);
-const tagUI=(id,i)=>{const t=tagsOf(i);return `<label>Gusti (tocca per togliere)</label><div class="chips">${t.map(x=>`<button class="chip on" data-a="rmtag" data-id="${id}" data-t="${esc(x)}">${esc(x)} ✕</button>`).join('')}</div><div class="chips">${SUG.filter(x=>!t.includes(x)).map(x=>`<button class="chip" data-a="addtag" data-id="${id}" data-t="${esc(x)}">+ ${x}</button>`).join('')}</div><input placeholder="Altro gusto, poi invio" data-newtag="${id}">`};
-const setTags=(id,n)=>w(db.ref('menu/items/'+id).update({tags:n.length?n:null,notes:null}));
+const T=['g1','g3','g5','g10','g28'],L=['1g','3g','5g','10g','28g'];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tg=i=>Array.isArray(i.tags)?i.tags:String(i.notes||'').split(',').map(x=>x.trim()).filter(Boolean);
 const sorted=(o,f=()=>1)=>Object.entries(o||{}).filter(([,v])=>f(v)).sort((a,b)=>a[1].order-b[1].order);
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
-const w=p=>p.then(()=>toast('Salvato'),e=>toast('Errore: '+e.message));
-
-db.ref('menu').on('value',s=>{M=s.val()||{};if(!document.activeElement.matches('input,select'))draw()});
-
-function draw(){
-  const s=M.settings||{};
-  $('#list').innerHTML=`<section class="card"><h2>Locale</h2>
-   <label>Nome<input data-p="settings/title" value="${esc(s.title)}"></label>
-   <label>Sottotitolo<input data-p="settings/tagline" value="${esc(s.tagline)}"></label>
-   <label>Valuta<input data-p="settings/currency" value="${esc(s.currency)}"></label></section>`+
-  sorted(M.cats).map(([id,c])=>`<section class="card">
-   <label>Categoria<input data-p="cats/${id}/name" value="${esc(c.name)}"></label>
-   <label>Descrizione<input data-p="cats/${id}/tagline" value="${esc(c.tagline)}"></label>
-   <div class="pr">${T.map((k,i)=>`<label>${L[i]}<input type="number" inputmode="numeric" data-p="cats/${id}/prices/${k}" value="${esc((c.prices||{})[k])}"></label>`).join('')}</div>
-   <div class="row"><button data-a="up" data-kind="cats" data-id="${id}">▲</button><button data-a="down" data-kind="cats" data-id="${id}">▼</button><button class="x" data-a="delcat" data-id="${id}">Elimina categoria</button></div>
-   ${sorted(M.items,i=>i.cat===id).map(([iid,i])=>`<div class="item">
-    <input data-p="items/${iid}/name" value="${esc(i.name)}" style="font-weight:700">
-    <label>Prezzo (facoltativo, es. 350/g)<input data-p="items/${iid}/price" value="${esc(i.price)}"></label>${tagUI(iid,i)}
-    <div class="row"><select data-p="items/${iid}/type" style="width:auto">${['sativa','indica','hybrid'].map(t=>`<option ${i.type===t?'selected':''}>${t}</option>`).join('')}</select>
-    <label><input type="checkbox" data-p="items/${iid}/soldout" ${i.soldout?'checked':''}>Esaurito</label>
-    <label><input type="checkbox" data-p="items/${iid}/hidden" ${i.hidden?'checked':''}>Nascosto</label></div>
-    <div class="row"><button data-a="up" data-kind="items" data-cat="${id}" data-id="${iid}">▲</button><button data-a="down" data-kind="items" data-cat="${id}" data-id="${iid}">▼</button><button class="x" data-a="delitem" data-id="${iid}">Elimina</button></div></div>`).join('')}
-   <button class="p" data-a="additem" data-cat="${id}">Aggiungi varietà</button></section>`).join('');
-}
-document.addEventListener('change',e=>{const t=e.target;
-  if(t.dataset.newtag){const id=t.dataset.newtag,v=t.value.trim();t.value='';if(v)setTags(id,[...tagsOf(M.items[id]),v]);draw();return}
-  if(!t.dataset.p)return;
-  const v=t.type==='checkbox'?t.checked:t.type==='number'?Number(t.value):t.value.trim();
-  w(db.ref('menu/'+t.dataset.p).set(v)).then(()=>draw())});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const{a,id,cat,kind}=b.dataset;
-  if(a==='addcat')w(db.ref('menu/cats').push({name:'Nuova categoria',tagline:'',order:Date.now(),prices:{g1:0,g3:0,g5:0,g10:0,g28:0}}));
-  if(a==='additem')w(db.ref('menu/items').push({cat,name:'Nuova varietà',type:'hybrid',order:Date.now()}));
-  if(a==='delcat'&&confirm('Eliminare categoria e tutte le sue varietà?')){const u={['cats/'+id]:null};Object.entries(M.items||{}).forEach(([k,i])=>i.cat===id&&(u['items/'+k]=null));w(db.ref('menu').update(u))}
-  if(a==='delitem'&&confirm('Eliminare questa varietà?'))w(db.ref('menu/items/'+id).remove());
-  if(a==='addtag'||a==='rmtag'){const cur=tagsOf(M.items[id]),t=b.dataset.t;setTags(id,a==='addtag'?[...cur,t]:cur.filter(x=>x!==t))}
-  if(a==='up'||a==='down'){const l=sorted(M[kind],v=>kind==='cats'||v.cat===cat),i=l.findIndex(x=>x[0]===id),j=i+(a==='up'?-1:1);
-    if(j>=0&&j<l.length)w(db.ref('menu/'+kind).update({[id+'/order']:l[j][1].order,[l[j][0]+'/order']:l[i][1].order}))}
-  if(a==='seed'&&confirm('Sostituisce tutto il menu attuale. Continuare?')){
-    const m={settings:{title:'Green Heaven',tagline:'Good plants, better days',currency:'฿'},cats:{},items:{}};
-    SEED.forEach(([n,t,p,its],ci)=>{const c=db.ref('menu/cats').push().key;m.cats[c]={name:n,tagline:t,order:ci,prices:Object.fromEntries(T.map((k,i)=>[k,p[i]]))};
-      its.forEach(([n2,no,ty],i)=>{m.items[db.ref('menu/items').push().key]={cat:c,name:n2,tags:no.split(','),type:ty,order:i}})});
-    w(db.ref('menu').set(m))}
+const NS='http://www.w3.org/2000/svg',fx=document.getElementById('fx'),fr=document.getElementById('fr'),GR=['#2fbf4a','#1f9e3c','#7ddc3b','#0f7a30','#a6f04a'],R=(a,b)=>a+Math.random()*(b-a);
+function mkLeaf(front){const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','-60 -108 120 168');s.setAttribute('class','pl');
+s.style.cssText=`--y0:${R(-10,85)}vh;--y1:${R(-10,85)}vh;--r0:${R(-180,180)}deg;--r1:${R(-180,180)+(Math.random()<.5?360:-360)}deg;width:${front?R(14,24):R(5,12)}vw;color:${GR[Math.random()*5|0]};opacity:${front?R(.12,.2):R(.35,.6)};filter:blur(${front?R(4,8):R(0,1.5)}px) drop-shadow(0 0 .6rem rgba(57,255,20,.35));animation-duration:${R(28,60)}s;animation-delay:-${R(0,60)}s;animation-direction:${Math.random()<.5?'normal':'reverse'}`;
+s.innerHTML='<use href="#lf"/>';(front?fr:fx).appendChild(s)}
+for(let i=0;i<9;i++)mkLeaf(0);for(let i=0;i<3;i++)mkLeaf(1);
+firebase.initializeApp(firebaseConfig);
+firebase.database().ref('menu').on('value',snap=>{
+  const M=snap.val()||{},s=M.settings||{},cur=s.currency||'';
+  {const h=document.getElementById('t'),n=s.title||'Green Heaven';h.textContent=n;h.dataset.text=n}
+  document.getElementById('tg').textContent=s.tagline||'';
+  document.getElementById('m').innerHTML=sorted(M.cats).map(([id,c])=>`
+   <section class="cat"><h2>${esc(c.name)}</h2><div class="tg">${esc(c.tagline)}</div>
+   <div class="pr">${T.map((k,i)=>`<div><small>${L[i]}</small><b>${esc((c.prices||{})[k]??'-')}</b></div>`).join('')}</div>
+   <ul>${sorted(M.items,i=>i.cat===id&&!i.hidden).map(([,i])=>`<li class="${i.soldout?'out':''}"><b>${esc(i.name)}</b><span class="n">${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em class="${esc(i.type)}">${i.soldout?'Esaurito':`${i.price?`<s>${esc(i.price)}</s>`:''}<i class="d"></i>${esc(i.type)}`}</em></li>`).join('')}</ul></section>`).join('');
 });
+
+const isFull=()=>document.fullscreenElement||matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
+const sync=()=>document.body.classList.toggle('full',!!isFull());
+const goFull=()=>{const e=document.documentElement;(e.requestFullscreen||e.webkitRequestFullscreen).call(e,{navigationUI:'hide'}).catch(()=>{});wake()};
+let lock;const wake=async()=>{try{lock=await navigator.wakeLock.request('screen')}catch(e){}};
+document.addEventListener('fullscreenchange',sync);
+['click','keydown','touchend'].forEach(ev=>document.addEventListener(ev,()=>{if(!document.fullscreenElement)goFull()}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)wake()});
+sync();wake();
 </script></body></html>
