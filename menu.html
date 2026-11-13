@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Green Heaven – Menu</title>
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#030806"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Green Heaven">
+<link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Pacifico&family=Unbounded:wght@300;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#eaf7ee;--mute:rgba(234,247,238,.55);--g:#38f58a;--lime:#c6ff4d}
+*{box-sizing:border-box;margin:0}
+html{font-size:min(.98vw,1.72vh)}
+body{background:#030806;color:var(--ink);font-family:'Sora',sans-serif;height:100vh;overflow:hidden;position:relative;cursor:none}
+
+.fx,.fr{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.fx{z-index:0}.fr{z-index:4}
+.au{position:absolute;border-radius:50%;will-change:transform;animation:drift 30s ease-in-out infinite alternate}
+.a1{width:60vmax;height:60vmax;left:-20vmax;top:-30vmax;background:radial-gradient(closest-side,rgba(20,160,80,.55),transparent)}
+.a2{width:50vmax;height:50vmax;right:-15vmax;top:5vmax;background:radial-gradient(closest-side,rgba(120,220,30,.3),transparent);animation-duration:38s}
+.a3{width:55vmax;height:55vmax;left:20vmax;bottom:-35vmax;background:radial-gradient(closest-side,rgba(0,170,140,.4),transparent);animation-duration:44s}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+.pl{position:absolute;left:0;top:0;will-change:transform;animation:pass linear infinite}
+@keyframes pass{from{transform:translate(calc(-10vw - 75vmin),var(--y0)) rotate(var(--r0))}to{transform:translate(calc(102vw + 20vmin),var(--y1)) rotate(var(--r1))}}
+.sw{position:absolute;left:0;right:0;bottom:-15vh;height:85vh}
+.sw i{position:absolute;bottom:0;width:40vw;height:40vw;border-radius:50%;will-change:transform,opacity;background:radial-gradient(closest-side,rgba(215,255,225,.13),rgba(120,255,170,.05) 55%,transparent);animation:smk 24s linear infinite}
+.sw i:nth-child(1){left:-8vw}.sw i:nth-child(2){left:22vw;animation-delay:-8s;animation-duration:30s}.sw i:nth-child(3){left:50vw;animation-delay:-15s}.sw i:nth-child(4){left:70vw;animation-delay:-4s;animation-duration:34s}
+@keyframes smk{0%{transform:translate(0,12vh) scale(.6);opacity:0}20%{opacity:1}100%{transform:translate(6vw,-75vh) scale(1.5);opacity:0}}
+header{display:flex;justify-content:center;align-items:center;gap:2.5rem;padding:1.2rem 0 1rem;position:relative;z-index:2}
+.tt{text-align:center}
+h1{font:300 4.6rem/1.1 'Unbounded',sans-serif;text-transform:uppercase;letter-spacing:.14em;margin-right:-.14em;color:#f4ffe6;text-shadow:0 0 .04em #fff,0 0 .12em #b8ff5a,0 0 .3em #6dff3a,0 0 .6em #2fd11f,0 0 1em #1a9e14;will-change:opacity;animation:flick 11s ease-in-out infinite -5s}
+.neon{margin-top:.2rem;display:flex;justify-content:center;align-items:baseline;gap:1.1rem;line-height:1.25}
+.neon span{will-change:opacity;animation:flick 7s ease-in-out infinite}
+.neon .g{font:400 2.5rem 'Titan One',cursive;letter-spacing:.06em;color:#d9fff0;text-shadow:0 0 .25rem #fff,0 0 .7rem #2dffb0,0 0 1.6rem #14e39a,0 0 3rem #0fbf80}
+.neon .v{font:400 2.9rem 'Pacifico',cursive;color:#ffe3ff;text-shadow:0 0 .25rem #fff,0 0 .7rem #ff5cf0,0 0 1.6rem #d63bff,0 0 3rem #a020f0;animation-duration:9s;animation-delay:-3s}
+@keyframes flick{0%,100%{opacity:1}50%{opacity:.86}}
+.hl{width:5rem;color:var(--g);will-change:transform;animation:sway 6s ease-in-out infinite alternate;--s:1}
+.hl.r{--s:-1}
+@keyframes sway{from{transform:scaleX(var(--s)) rotate(-8deg)}to{transform:scaleX(var(--s)) rotate(8deg)}}
+.lg{position:fixed;top:1.4rem;right:2.4rem;z-index:3;display:flex;gap:1.1rem;font-size:.95rem;color:var(--mute)}
+.lg span{display:flex;align-items:center;gap:.4rem}.lg span::before{content:'';width:.7rem;height:.7rem;border-radius:50%;background:var(--c);box-shadow:0 0 .7rem var(--c)}
+main{padding:0 3.5rem;column-count:var(--cols,2);column-gap:2.4rem;position:relative;z-index:2}
+.cat{position:relative;overflow:hidden;break-inside:avoid;margin-bottom:1.4rem;padding:1.2rem 1.5rem 1rem;border-radius:1.6rem;background:rgba(255,255,255,.07);box-shadow:0 1.2rem 2.4rem rgba(0,0,0,.45)}
+.cat>*{position:relative;z-index:1}
+.cat::before{content:'';position:absolute;z-index:0;left:50%;top:50%;width:170%;aspect-ratio:1;margin:-85% 0 0 -85%;background:conic-gradient(var(--a),transparent 22%,transparent 50%,var(--a) 50%,transparent 72%);will-change:transform;animation:led 14s linear infinite;animation-delay:var(--d,0s)}
+.cat::after{content:'';position:absolute;z-index:0;inset:.13rem;border-radius:1.48rem;background:linear-gradient(160deg,#18281e,#0b140f 42%,#060b08)}
+@keyframes led{to{transform:rotate(1turn)}}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.cat h2{font:800 1.75rem 'Unbounded',sans-serif;color:var(--a);letter-spacing:-.01em}
+.ch small{font-size:.95rem;color:var(--mute)}
+.cat .tg{font-size:.95rem;color:var(--mute);margin:.15rem 0 .8rem}
+.pr{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;margin-bottom:.7rem;border-radius:1rem;background:rgba(0,0,0,.4);box-shadow:inset 0 .12rem 0 var(--a)}
+.pr div{padding:.55rem .3rem .6rem;text-align:center;border-left:.06rem solid rgba(255,255,255,.08)}
+.pr div:first-child{border-left:0}
+.pr small{display:block;font-size:.9rem;color:var(--mute);margin-bottom:.1rem}
+.pr b{font:700 1.3rem 'Unbounded',sans-serif;color:#fff}.pr b i{font:400 .75rem 'Sora';font-style:normal;color:var(--a);margin-right:.15rem}
+ul{list-style:none;padding:0}
+ul{display:grid;grid-template-columns:.3rem max-content 1fr auto;column-gap:1rem}
+@supports not (grid-template-columns:subgrid){li{grid-template-columns:.3rem 13.5rem 1fr auto}}
+li{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center;gap:1rem;padding:.38rem 0;font-size:1.2rem}
+li+li{border-top:.06rem solid rgba(255,255,255,.06)}
+.tb{height:1.7rem;border-radius:1rem;background:var(--c);box-shadow:0 0 .8rem var(--c)}
+li b{font-weight:700}
+u{text-decoration:none;display:inline-block;font-size:.9rem;padding:.1rem .6rem;margin:.12rem .35rem .12rem 0;border-radius:.5rem;background:rgba(255,255,255,.08);color:rgba(234,247,238,.85)}
+li em{font-style:normal;display:flex;flex-direction:column;align-items:flex-end;min-width:5.5rem}
+li em small{font-size:.85rem;color:var(--c)}
+/* a flavour tag softly lights up now and then (opacity only) */
+u{position:relative}
+u::after{content:'';position:absolute;inset:0;border-radius:inherit;background:rgba(198,255,77,.2);box-shadow:0 0 0 .07rem rgba(198,255,77,.7),0 0 .8rem rgba(198,255,77,.45);opacity:0;transition:opacity 1.2s ease-in-out}
+u.sh::after{opacity:1}
+li.out{opacity:.35}li.out b{text-decoration:line-through}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<div class="fx" id="fx"><div class="au a1"></div><div class="au a2"></div><div class="au a3"></div><div class="sw"><i></i><i></i><i></i><i></i></div></div>
+<div class="fr" id="fr"></div>
+<div class="lg"><span style="--c:#3ea8ff">sativa</span><span style="--c:#b56bff">indica</span><span style="--c:#ff4fa0">hybrid</span></div>
+<header><svg class="hl" viewBox="-60 -108 120 168"></svg><div class="tt"><h1 id="t">Green Heaven</h1><p id="tg" class="neon"></p></div><svg class="hl r" viewBox="-60 -108 120 168"></svg></header>
+<main id="m"></main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyChC37LoVtmMjkptinC6TmJzL-jgz6C30w",
+  authDomain: "greenhaven-bc303.firebaseapp.com",
+  databaseURL: "https://greenhaven-bc303-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "greenhaven-bc303",
+  storageBucket: "greenhaven-bc303.firebasestorage.app",
+  messagingSenderId: "381514844021",
+  appId: "1:381514844021:web:cc946cc5d8afa36294f53c"
+};
+</script>
+<script>
+const T=['g1','g3','g5','g10','g28'],L=['1g','3g','5g','10g','28g'],ACC=['#c6ff4d','#4dffc3','#38f58a','#a8ff6b','#7dffe0'],TC={sativa:'#3ea8ff',indica:'#b56bff',hybrid:'#ff4fa0'};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tg=i=>Array.isArray(i.tags)?i.tags:String(i.notes||'').split(',').map(x=>x.trim()).filter(Boolean);
+const tiersOf=c=>c.tiers===false?[]:Array.isArray(c.tiers)?c.tiers:c.tiers?Object.values(c.tiers):T.map((k,i)=>({l:L[i],p:(c.prices||{})[k]})).filter(x=>x.p!==undefined);
+const fmt=p=>p===''||p==null||isNaN(p)?esc(p??'-'):Number(p).toLocaleString('en-US');
+const sorted=(o,f=()=>1)=>Object.entries(o||{}).filter(([,v])=>f(v)).sort((a,b)=>a[1].order-b[1].order);
+const LEAF=`<path d="M-1.6 0L-1 50L1 50L1.6 0ZM0.0 0.0L0.0 0.0L6.4 -8.7L5.0 -11.1L10.1 -19.8L7.3 -22.2L11.8 -30.9L8.3 -33.3L12.0 -42.0L8.2 -44.4L11.1 -53.1L7.4 -55.6L9.2 -64.2L6.0 -66.7L6.8 -75.3L4.2 -77.8L4.0 -86.4L2.1 -88.9L1.0 -97.6L0.0 -100.0L-1.0 -97.6L-2.1 -88.9L-4.0 -86.4L-4.2 -77.8L-6.8 -75.3L-6.0 -66.7L-9.2 -64.2L-7.4 -55.6L-11.1 -53.1L-8.2 -44.4L-12.0 -42.0L-8.3 -33.3L-11.8 -30.9L-7.3 -22.2L-10.1 -19.8L-5.0 -11.1L-6.4 -8.7L0.0 -0.0ZM0.0 0.0L0.0 0.0L8.5 -4.2L8.4 -6.7L15.8 -11.5L14.6 -14.5L21.6 -19.5L19.8 -22.8L26.2 -28.1L24.2 -31.6L29.9 -37.2L28.0 -40.6L32.9 -46.7L31.3 -49.9L35.4 -56.4L34.3 -59.3L37.7 -66.2L37.2 -68.9L39.8 -76.1L40.0 -78.4L38.2 -76.9L33.9 -70.5L31.4 -69.4L27.8 -62.6L24.8 -61.8L22.0 -54.7L18.4 -54.0L16.4 -46.5L12.5 -46.1L11.3 -38.1L7.4 -37.7L6.8 -29.4L3.1 -28.9L3.1 -20.3L-0.0 -19.5L0.5 -10.7L-1.6 -9.4L0.0 -0.0ZM0.0 0.0L0.0 -0.0L1.6 -9.4L-0.5 -10.7L0.0 -19.5L-3.1 -20.3L-3.1 -28.9L-6.8 -29.4L-7.4 -37.7L-11.3 -38.1L-12.5 -46.1L-16.4 -46.5L-18.4 -54.0L-22.0 -54.7L-24.8 -61.8L-27.8 -62.6L-31.4 -69.4L-33.9 -70.5L-38.2 -76.9L-40.0 -78.4L-39.8 -76.1L-37.2 -68.9L-37.7 -66.2L-34.3 -59.3L-35.4 -56.4L-31.3 -49.9L-32.9 -46.7L-28.0 -40.6L-29.9 -37.2L-24.2 -31.6L-26.2 -28.1L-19.8 -22.8L-21.6 -19.5L-14.6 -14.5L-15.8 -11.5L-8.4 -6.7L-8.5 -4.2L-0.0 0.0ZM0.0 0.0L0.0 0.0L7.1 0.2L7.9 -1.5L14.5 -2.0L14.8 -4.5L21.2 -5.3L21.2 -8.1L27.3 -9.4L27.1 -12.4L32.9 -14.1L32.8 -17.0L38.2 -19.3L38.3 -22.0L43.3 -24.8L43.6 -27.2L48.2 -30.6L48.9 -32.5L53.1 -36.4L54.1 -37.9L52.4 -37.5L47.3 -34.8L45.2 -34.9L40.5 -31.7L38.2 -32.2L33.8 -28.5L31.2 -29.3L27.2 -25.0L24.5 -26.1L20.9 -21.3L18.2 -22.4L14.9 -17.1L12.2 -18.1L9.2 -12.4L6.9 -12.9L4.1 -6.9L2.3 -6.7L0.0 -0.0ZM0.0 0.0L0.0 -0.0L-2.3 -6.7L-4.1 -6.9L-6.9 -12.9L-9.2 -12.4L-12.2 -18.1L-14.9 -17.1L-18.2 -22.4L-20.9 -21.3L-24.5 -26.1L-27.2 -25.0L-31.2 -29.3L-33.8 -28.5L-38.2 -32.2L-40.5 -31.7L-45.2 -34.9L-47.3 -34.8L-52.4 -37.5L-54.1 -37.9L-53.1 -36.4L-48.9 -32.5L-48.2 -30.6L-43.6 -27.2L-43.3 -24.8L-38.3 -22.0L-38.2 -19.3L-32.8 -17.0L-32.9 -14.1L-27.1 -12.4L-27.3 -9.4L-21.2 -8.1L-21.2 -5.3L-14.8 -4.5L-14.5 -2.0L-7.9 -1.5L-7.1 0.2L-0.0 0.0ZM0.0 0.0L0.0 0.0L4.0 2.2L4.9 1.4L8.8 3.0L9.7 1.7L13.5 3.1L14.3 1.5L18.2 2.5L19.0 0.8L22.7 1.5L23.5 -0.2L27.3 0.1L28.1 -1.4L31.7 -1.6L32.6 -2.8L36.2 -3.4L37.1 -4.3L40.6 -5.3L41.6 -5.8L40.5 -6.1L36.8 -6.1L35.7 -6.7L32.1 -6.3L30.9 -7.2L27.4 -6.4L26.2 -7.6L22.7 -6.3L21.4 -7.7L18.0 -6.0L16.8 -7.5L13.4 -5.4L12.2 -6.7L8.8 -4.3L7.6 -5.4L4.3 -2.7L3.2 -3.2L0.0 -0.0ZM0.0 0.0L0.0 -0.0L-3.2 -3.2L-4.3 -2.7L-7.6 -5.4L-8.8 -4.3L-12.2 -6.7L-13.4 -5.4L-16.8 -7.5L-18.0 -6.0L-21.4 -7.7L-22.7 -6.3L-26.2 -7.6L-27.4 -6.4L-30.9 -7.2L-32.1 -6.3L-35.7 -6.7L-36.8 -6.1L-40.5 -6.1L-41.6 -5.8L-40.6 -5.3L-37.1 -4.3L-36.2 -3.4L-32.6 -2.8L-31.7 -1.6L-28.1 -1.4L-27.3 0.1L-23.5 -0.2L-22.7 1.5L-19.0 0.8L-18.2 2.5L-14.3 1.5L-13.5 3.1L-9.7 1.7L-8.8 3.0L-4.9 1.4L-4.0 2.2L-0.0 0.0Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M0.0 0.0L0.0 -96.0M0.0 -10.0L4.6 -19.0M0.0 -10.0L-4.6 -19.0M0.0 -20.0L6.8 -29.0M0.0 -20.0L-6.8 -29.0M0.0 -30.0L7.9 -39.0M0.0 -30.0L-7.9 -39.0M0.0 -40.0L8.1 -49.0M0.0 -40.0L-8.1 -49.0M0.0 -50.0L7.7 -59.0M0.0 -50.0L-7.7 -59.0M0.0 -60.0L6.7 -69.0M0.0 -60.0L-6.7 -69.0M0.0 -70.0L5.3 -79.0M0.0 -70.0L-5.3 -79.0M0.0 -80.0L3.7 -89.0M0.0 -80.0L-3.7 -89.0M0.0 0.0L38.4 -75.3M4.0 -7.8L11.2 -13.1M4.0 -7.8L4.0 -16.7M8.0 -15.7L16.9 -20.0M8.0 -15.7L6.3 -25.5M12.0 -23.5L21.8 -27.4M12.0 -23.5L9.4 -33.7M16.0 -31.4L26.0 -35.2M16.0 -31.4L13.2 -41.7M20.0 -39.2L29.6 -43.2M20.0 -39.2L17.5 -49.3M24.0 -47.0L32.8 -51.4M24.0 -47.0L22.3 -56.8M28.0 -54.9L35.7 -59.8M28.0 -54.9L27.4 -64.1M32.0 -62.7L38.4 -68.3M32.0 -62.7L32.7 -71.2M0.0 0.0L-38.4 -75.3M-4.0 -7.8L-4.0 -16.7M-4.0 -7.8L-11.2 -13.1M-8.0 -15.7L-6.3 -25.5M-8.0 -15.7L-16.9 -20.0M-12.0 -23.5L-9.4 -33.7M-12.0 -23.5L-21.8 -27.4M-16.0 -31.4L-13.2 -41.7M-16.0 -31.4L-26.0 -35.2M-20.0 -39.2L-17.5 -49.3M-20.0 -39.2L-29.6 -43.2M-24.0 -47.0L-22.3 -56.8M-24.0 -47.0L-32.8 -51.4M-28.0 -54.9L-27.4 -64.1M-28.0 -54.9L-35.7 -59.8M-32.0 -62.7L-32.7 -71.2M-32.0 -62.7L-38.4 -68.3M0.0 0.0L51.9 -36.3M5.4 -3.8L12.0 -4.7M5.4 -3.8L8.5 -9.7M10.8 -7.6L18.3 -7.3M10.8 -7.6L13.1 -14.7M16.2 -11.4L24.1 -10.5M16.2 -11.4L18.1 -19.0M21.6 -15.1L29.6 -14.1M21.6 -15.1L23.4 -22.9M27.0 -18.9L34.8 -18.2M27.0 -18.9L29.0 -26.5M32.4 -22.7L39.8 -22.5M32.4 -22.7L34.8 -29.7M37.8 -26.5L44.7 -27.0M37.8 -26.5L40.7 -32.8M43.3 -30.3L49.5 -31.7M43.3 -30.3L46.7 -35.7M0.0 0.0L-51.9 -36.3M-5.4 -3.8L-8.5 -9.7M-5.4 -3.8L-12.0 -4.7M-10.8 -7.6L-13.1 -14.7M-10.8 -7.6L-18.3 -7.3M-16.2 -11.4L-18.1 -19.0M-16.2 -11.4L-24.1 -10.5M-21.6 -15.1L-23.4 -22.9M-21.6 -15.1L-29.6 -14.1M-27.0 -18.9L-29.0 -26.5M-27.0 -18.9L-34.8 -18.2M-32.4 -22.7L-34.8 -29.7M-32.4 -22.7L-39.8 -22.5M-37.8 -26.5L-40.7 -32.8M-37.8 -26.5L-44.7 -27.0M-43.3 -30.3L-46.7 -35.7M-43.3 -30.3L-49.5 -31.7M0.0 0.0L39.9 -5.6M4.2 -0.6L8.2 0.8M4.2 -0.6L7.6 -3.0M8.3 -1.2L12.5 1.1M8.3 -1.2L11.7 -4.5M12.5 -1.8L16.7 1.0M12.5 -1.8L15.8 -5.6M16.6 -2.3L20.9 0.5M16.6 -2.3L19.9 -6.2M20.8 -2.9L25.0 -0.2M20.8 -2.9L24.1 -6.6M25.0 -3.5L29.1 -1.2M25.0 -3.5L28.3 -6.8M29.1 -4.1L33.2 -2.4M29.1 -4.1L32.5 -6.8M33.3 -4.7L37.2 -3.7M33.3 -4.7L36.8 -6.7M0.0 0.0L-39.9 -5.6M-4.2 -0.6L-7.6 -3.0M-4.2 -0.6L-8.2 0.8M-8.3 -1.2L-11.7 -4.5M-8.3 -1.2L-12.5 1.1M-12.5 -1.8L-15.8 -5.6M-12.5 -1.8L-16.7 1.0M-16.6 -2.3L-19.9 -6.2M-16.6 -2.3L-20.9 0.5M-20.8 -2.9L-24.1 -6.6M-20.8 -2.9L-25.0 -0.2M-25.0 -3.5L-28.3 -6.8M-25.0 -3.5L-29.1 -1.2M-29.1 -4.1L-32.5 -6.8M-29.1 -4.1L-33.2 -2.4M-33.3 -4.7L-36.8 -6.7M-33.3 -4.7L-37.2 -3.7" fill="none" stroke="currentColor" stroke-opacity=".55" stroke-width="1"/>`;
+const NS='http://www.w3.org/2000/svg',fx=document.getElementById('fx'),fr=document.getElementById('fr'),GR=['#38f58a','#c6ff4d','#4dffc3','#7dffe0','#a8ff6b'],R=(a,b)=>a+Math.random()*(b-a);
+function mkLeaf(front){const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','-60 -108 120 168');s.setAttribute('class','pl');
+s.style.cssText=`--y0:${R(-10,85)}vh;--y1:${R(-10,85)}vh;--r0:${R(-180,180)}deg;--r1:${R(-180,180)+(Math.random()<.5?360:-360)}deg;width:${front?R(30,45):R(14,26)}vmin;color:${GR[Math.random()*5|0]};opacity:${front?R(.12,.2):R(.55,.9)};filter:${front?`blur(${R(4,7)}px)`:'none'};animation-duration:${R(34,70)}s;animation-delay:-${R(0,70)}s;animation-direction:${Math.random()<.5?'normal':'reverse'}`;
+s.innerHTML=LEAF;(front?fr:fx).appendChild(s)}
+document.querySelectorAll('.hl').forEach(e=>e.innerHTML=LEAF);
+for(let i=0;i<6;i++)mkLeaf(0);for(let i=0;i<2;i++)mkLeaf(1);
+const DEMO={settings:{title:'Green Heaven',tagline:'Good Vibes',currency:'฿'},cats:{a:{name:'Premium Quality',tagline:'Rare genetics, limited supply',order:0,tiers:[{l:'1g',p:420},{l:'3g',p:1000},{l:'5g',p:1500},{l:'10g',p:2500},{l:'28g',p:5600}]},b:{name:'Pop Size',tagline:'Small size, great quality',order:1,tiers:[{l:'1g',p:120},{l:'3g',p:300},{l:'5g',p:450},{l:'10g',p:800},{l:'28g',p:1700}]},c:{name:'Exotic',tagline:'Top tier, limited quantity',order:2,tiers:[{l:'1g',p:250},{l:'3g',p:500},{l:'5g',p:750},{l:'10g',p:1300},{l:'28g',p:3000}]}},items:{1:{cat:'a',name:'Jack Herer',tags:['Fruity','Citrus','Wood'],type:'sativa',order:0},2:{cat:'a',name:'Wedding Cake',tags:['Sweet','Creamy','Earthy'],type:'indica',order:1},3:{cat:'a',name:'Blue Dream',tags:['Berry','Herbal','Pine'],type:'hybrid',order:2},4:{cat:'b',name:'Jet Fuel',tags:['Diesel','Earth','Gassy'],type:'sativa',order:0},5:{cat:'b',name:'Blue Cheese',tags:['Sweet','Blueberry','Funk'],type:'indica',order:1,soldout:true},6:{cat:'c',name:'Super Lemon Haze',tags:['Citrus','Uplifting','Energetic'],type:'sativa',order:0},7:{cat:'c',name:'Purple Queen',tags:['Pine','Citrus','Gas'],type:'indica',order:1},8:{cat:'c',name:'Apple Pie',tags:['Sweet','Creamy','Herbal'],type:'hybrid',order:2}}};
+// Old Italian placeholder texts still stored in the database are shown in English.
+const EN={'Genetiche rare, quantità limitata':'Rare genetics / Limited supply','Formato piccolo, ottima qualità':'Small size / Great quality','Top tier, quantità limitata':'Top tier / Limited quantity','Nuova varietà':'New strain','Nuova categoria':'New category'};
+const tr=t=>EN[String(t??'').trim()]||t;
+const neon=t=>{t=String(t||'').trim();if(!t||/good plants/i.test(t))t='Good Vibes';const w=t.split(/\s+/),v=w.length>1?w.pop():'';
+  return `<span class="g">${esc(w.join(' '))}</span>${v?`<span class="v">${esc(v)}</span>`:''}`};
+function draw(M){
+  const s=M.settings||{},cur=s.currency||'';
+  document.getElementById('t').textContent=s.title||'Green Heaven';
+  document.getElementById('tg').innerHTML=neon(s.tagline);
+  document.getElementById('m').innerHTML=sorted(M.cats).map(([id,c],n)=>{const its=sorted(M.items,i=>i.cat===id&&!i.hidden);return `
+   <section class="cat" style="--a:${ACC[n%ACC.length]};--d:${-n*3.1}s"><div class="ch"><h2>${esc(tr(c.name))}</h2><small>${its.length} strain${its.length===1?'':'s'}</small></div><div class="tg">${esc(tr(c.tagline))}</div>
+   <div class="pr">${tiersOf(c).map(t=>`<div><small>${esc(t.l)}</small><b>${cur?`<i>${esc(cur)}</i>`:''}${fmt(t.p)}</b></div>`).join('')}</div>
+   <ul>${its.map(([,i])=>`<li class="${i.soldout?'out':''}" style="--c:${TC[i.type]||'#888'}"><span class="tb"></span><b>${esc(tr(i.name))}</b><span>${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em><small>${i.soldout?'sold out':esc(i.type||'')}</small></em></li>`).join('')}</ul></section>`}).join('');
+}
+// Fit the whole menu on whatever screen it is shown on (HD, 4K, any ratio, any
+// number of strains): try 1-3 columns, for each find by binary search the biggest
+// text size where nothing spills out vertically or horizontally, keep the best.
+const H=document.documentElement,MAIN=document.getElementById('m');
+const vw=()=>(window.visualViewport?visualViewport.width:0)||innerWidth,vh=()=>(window.visualViewport?visualViewport.height:0)||innerHeight;
+function fits(px){H.style.fontSize=px+'px';
+  if(MAIN.getBoundingClientRect().bottom>vh()-px*.6)return false;
+  if(H.scrollWidth>vw()+1)return false;
+  for(const c of MAIN.querySelectorAll('ul,li,.pr,.ch'))if(c.scrollWidth>c.clientWidth+1)return false;
+  return true}
+let fitting=false,fitKey='',ver=0;
+function fit(force){const key=vw()+'x'+vh()+'|'+ver;if(fitting||(!force&&key===fitKey))return;fitting=true;fitKey=key;
+  const n=MAIN.children.length,base=Math.min(vw()*.0098,vh()*.0172),opts=n<2?[1]:n<3?[2,1]:[2,3];
+  let best={px:0,cols:opts[0]};
+  for(const cols of opts){H.style.setProperty('--cols',cols);
+    let lo=4,hi=base*1.25;
+    if(!fits(lo)){if(!best.px)best={px:lo,cols};continue}
+    for(let k=0;k<14;k++){const mid=(lo+hi)/2;fits(mid)?lo=mid:hi=mid}
+    if(lo>best.px*1.04)best={px:lo,cols}}
+  H.style.setProperty('--cols',best.cols);H.style.fontSize=best.px+'px';fitting=false}
+let ft;const refit=()=>{clearTimeout(ft);ft=setTimeout(fit,120)};
+addEventListener('resize',refit);addEventListener('orientationchange',refit);
+if(window.visualViewport)visualViewport.addEventListener('resize',refit);
+if(window.ResizeObserver)new ResizeObserver(refit).observe(document.body);
+if(document.fonts){document.fonts.ready.then(()=>{ver++;fit()});document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',()=>{ver++;refit()})}
+// Tell the TV shell (index.html) when the menu is drawn and fonts are in, so it can cross-fade to it.
+let ready=false;const tellReady=()=>{if(ready)return;ready=true;(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{ver++;fit();requestAnimationFrame(()=>parent!==window&&parent.postMessage('gh-menu-ready',location.origin))})};
+const show=M=>{draw(M);ver++;fit();tellReady()};
+if(window.firebase){firebase.initializeApp(firebaseConfig);firebase.database().ref('menu').on('value',x=>show(x.val()||{}))}else show(DEMO);
+
+// Every couple of seconds one random flavour tag shimmers.
+setInterval(()=>{const t=document.querySelectorAll('li:not(.out) u');if(!t.length)return;const e=t[Math.random()*t.length|0];
+  e.classList.add('sh');setTimeout(()=>e.classList.remove('sh'),1500)},3000);
+
+</script></body></html>
