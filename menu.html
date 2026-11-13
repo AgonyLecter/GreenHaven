@@ -113,7 +113,9 @@ function draw(M){
   const s=M.settings||{},cur=s.currency||'';
   document.getElementById('t').textContent=s.title||'Green Heaven';
   document.getElementById('tg').innerHTML=neon(s.tagline);
-  document.getElementById('m').innerHTML=sorted(M.cats).map(([id,c],n)=>{const its=sorted(M.items,i=>i.cat===id&&!i.hidden);return `
+  // Categories without any visible strain are not shown (no empty boxes on the TV).
+  const CATS=sorted(M.cats).filter(([id])=>Object.values(M.items||{}).some(i=>i.cat===id&&!i.hidden));
+  document.getElementById('m').innerHTML=CATS.map(([id,c],n)=>{const its=sorted(M.items,i=>i.cat===id&&!i.hidden);return `
    <section class="cat" style="--a:${ACC[n%ACC.length]};--d:${-n*3.1}s"><div class="ch"><h2>${esc(tr(c.name))}</h2><small>${its.length} strain${its.length===1?'':'s'}</small></div><div class="tg">${esc(tr(c.tagline))}</div>
    <div class="pr">${tiersOf(c).map(t=>`<div><small>${esc(t.l)}</small><b>${cur?`<i>${esc(cur)}</i>`:''}${fmt(t.p)}</b></div>`).join('')}</div>
    <ul>${its.map(([,i])=>`<li class="${i.soldout?'out':''}" style="--c:${TC[i.type]||'#888'}"><span class="tb"></span><b>${esc(tr(i.name))}</b><span>${tg(i).map(t=>`<u>${esc(t)}</u>`).join('')}</span><em><small>${i.soldout?'sold out':esc(i.type||'')}</small></em></li>`).join('')}</ul></section>`}).join('');
